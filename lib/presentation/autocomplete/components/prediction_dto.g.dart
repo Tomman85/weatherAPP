@@ -7,8 +7,8 @@ part of 'prediction_dto.dart';
 // **************************************************************************
 
 Post _$PostFromJson(Map<String, dynamic> json) => Post(
-      name: json['name'] as String,
-      age: json['age'] as int,
+      name: json['name'] as String?,
+      age: json['age'] as int?,
     );
 
 Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{

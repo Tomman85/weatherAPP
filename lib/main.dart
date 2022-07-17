@@ -2,9 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:weather/const/api_data.dart';
+import 'package:weather/presentation/autocomplete/autocomplete.dart';
 import 'package:weather/presentation/autocomplete/components/prediction_dto.dart';
-import 'package:weather/presentation/autocomplete/services/autocomplete_services.dart';
-import 'package:weather/presentation/autocomplete/services/data_model.dart';
+import 'package:weather/presentation/autocomplete/list_autocomplte.dart';
+// import 'package:weather/presentation/autocomplete/services/autocomplete_services.dart';
+// import 'package:weather/presentation/autocomplete/services/data_model.dart';
 
 void main() {
   runApp(MyApp());
@@ -19,7 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(),
+      home:ListUSerScrren()
     );
   }
 }
