@@ -99,7 +99,7 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
                     fillColor: Colors.grey.shade200,
                     prefixIcon: const Icon(
                       Icons.search,
-                      color: Colors.blue,
+                      color: Colors.grey,
                     ),
                     suffixIcon: IconButton(
                       icon: Icon(
