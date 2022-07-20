@@ -110,12 +110,7 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
                       onPressed: () async {
                         LocationPermission permission;
                         permission = await Geolocator.requestPermission();
-
                         _getCurrentLocation();
-
-                        print(_position?.longitude);
-                        print(_currentAddress);
-
                         if (_currentAddress != null) {
                           Hive.box(favCity).add(
                             DataModel(
