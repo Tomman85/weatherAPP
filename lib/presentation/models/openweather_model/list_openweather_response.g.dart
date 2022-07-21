@@ -7,13 +7,20 @@ part of 'list_openweather_response.dart';
 // **************************************************************************
 
 ListModelData _$ListModelDataFromJson(Map<String, dynamic> json) =>
-    ListModelData(
-      currentWeatherModel: (json['hourly'] as List<dynamic>)
-          .map((e) => CurrentWeatherModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
+    ListModelData()
+      ..currentWeatherModel = json['current'] == null
+          ? null
+          : WeatherModel.fromJson(json['current'] as Map<String, dynamic>)
+      ..hourlyWeatherModel = (json['hourly'] as List<dynamic>?)
+          ?.map((e) => WeatherModel.fromJson(e as Map<String, dynamic>))
+          .toList()
+      ..dailyWeatherModel = (json['daily'] as List<dynamic>?)
+          ?.map((e) => WeatherModel.fromJson(e as Map<String, dynamic>))
+          .toList();
 
 Map<String, dynamic> _$ListModelDataToJson(ListModelData instance) =>
     <String, dynamic>{
-      'hourly': instance.currentWeatherModel,
+      'current': instance.currentWeatherModel,
+      'hourly': instance.hourlyWeatherModel,
+      'daily': instance.dailyWeatherModel,
     };

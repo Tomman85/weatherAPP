@@ -6,14 +6,12 @@ part of 'list_current_weather.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-CurrentWeatherModel _$CurrentWeatherModelFromJson(Map<String, dynamic> json) =>
-    CurrentWeatherModel(
+WeatherModel _$WeatherModelFromJson(Map<String, dynamic> json) => WeatherModel(
       temperature: (json['temp'] as num?)?.toDouble(),
       windSpeed: (json['wind_speed'] as num?)?.toDouble(),
     );
 
-Map<String, dynamic> _$CurrentWeatherModelToJson(
-        CurrentWeatherModel instance) =>
+Map<String, dynamic> _$WeatherModelToJson(WeatherModel instance) =>
     <String, dynamic>{
       'temp': instance.temperature,
       'wind_speed': instance.windSpeed,
