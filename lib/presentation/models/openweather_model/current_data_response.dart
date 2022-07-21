@@ -5,17 +5,17 @@ import 'weather_model.dart';
 part 'current_data_response.g.dart';
 
 @JsonSerializable()
-class ListDailyModelData {
+class ListCurrentModelData {
 
   @JsonKey(name: 'current')
-  List<WeatherModel>? currentWeatherModel;
+  WeatherModel currentWeatherModel;
 
-  ListDailyModelData({
+  ListCurrentModelData({
     required this.currentWeatherModel,
   });
 
-  factory ListDailyModelData.fromJson(Map<String, dynamic> json) =>
-      _$ListDailyModelDataFromJson(json);
+  factory ListCurrentModelData.fromJson(Map<String, dynamic> json) =>
+      _$ListCurrentModelDataFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ListDailyModelDataToJson(this);
+  Map<String, dynamic> toJson() => _$ListCurrentModelDataToJson(this);
 }
