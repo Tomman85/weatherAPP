@@ -9,6 +9,7 @@ import 'package:weather/presentation/models/hive_box_models/model_single_city.da
 import 'package:weather/presentation/models/openweather_model/current_data_response.dart';
 import 'package:weather/presentation/models/openweather_model/weather_model.dart';
 import 'package:weather/presentation/models/openweather_model/hourly_data_response.dart';
+import 'package:weather/presentation/search_page/components/delete_autocomplete_background.dart';
 import 'package:weather/presentation/services/http_openweather_service.dart';
 
 class FavoritesCities extends StatefulWidget {
@@ -74,11 +75,21 @@ class _FavoritesCitiesState extends State<FavoritesCities> {
 
                 return Dismissible(
                   key: UniqueKey(),
+                  direction: DismissDirection.startToEnd,
                   onDismissed: (direction) {
-                    setState(() {
-                      Hive.box(favCity).deleteAt(index);
-                    });
+                    if (direction == DismissDirection.startToEnd) {
+                      setState(() {
+                        Hive.box(favCity).deleteAt(index);
+                      });
+                    } else if (direction == DismissDirection.endToStart) {
+                      print('Dodaj do main page');
+
+                    }
                   },
+                  confirmDismiss: (DismissDirection direction) async {
+                    return await buildShowDialog(context);
+                  },
+                  background: const DeleteAutocompleteBackground(),
                   child: GestureDetector(
                     onTap: () {
                       Hive.box(mainCity).putAt(
@@ -159,5 +170,27 @@ class _FavoritesCitiesState extends State<FavoritesCities> {
             ),
           );
         });
+  }
+
+  Future<bool?> buildShowDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Potwierdź usunięcię"),
+          content: const Text(
+              "Czy jesteś pewny aby usunać miasto z listy ulubionych?"),
+          actions: <Widget>[
+            TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text("Usuń")),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text("Anuluj"),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
