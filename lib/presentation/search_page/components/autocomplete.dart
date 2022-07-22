@@ -8,7 +8,7 @@ import 'package:weather/credentials.dart';
 import 'package:weather/presentation/models/autocomplete_model/list_response.dart';
 import 'package:weather/presentation/models/autocomplete_model/prediction_model.dart';
 import 'package:weather/presentation/models/hive_box_models/model_list_of_cities.dart';
-import 'package:weather/presentation/models/openweather_model/list_openweather_response.dart';
+import 'package:weather/presentation/models/openweather_model/hourly_data_response.dart';
 import 'package:weather/presentation/services/http_autocomplete_service.dart';
 
 class AutocompletePredictions extends StatefulWidget {
@@ -102,14 +102,13 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
                       color: Colors.grey,
                     ),
                     suffixIcon: IconButton(
-                      icon: Icon(
+                      icon: const  Icon(
                         Icons.location_on_outlined,
                         size: 30,
                       ),
                       color: Colors.grey.shade900,
                       onPressed: () async {
-                        LocationPermission permission;
-                        permission = await Geolocator.requestPermission();
+                       await Geolocator.requestPermission();
                         _getCurrentLocation();
                         if (_currentAddress != null) {
                           Hive.box(favCity).add(
@@ -168,11 +167,11 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
                           onTap: () {
                             onSelected(option);
                             var box = Hive.box(favCity);
-                            //TODO tylko mozna dodac pojeedyncze
+                            //TODO Dodac funkcjonalosc aby nie powielac miast
                             box.add(
                               DataModel(
                                 longitude: option.longitude.toString(),
-                                latitude: option.longitude.toString(),
+                                latitude: option.latitude.toString(),
                                 cityName: option.formatted.toString(),
                               ),
                             );
