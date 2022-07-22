@@ -43,8 +43,6 @@ class _HomePageState extends State<HomePage> {
       isLoading = false;
 
       if (response?.statusCode == 200) {
-print("dupa");
-
         hourlyDataResponse = ListHourlyModelData.fromJson(response?.data);
         hourlyWeatherData = hourlyDataResponse?.hourlyWeatherModel;
       } else {
@@ -85,7 +83,8 @@ print("dupa");
           child: FutureBuilder(
             builder: (BuildContext context, snapshot) {
               if (snapshot.hasData) {
-                List<ListHourlyModelData> elo = hourlyWeatherData!.cast<ListHourlyModelData>();
+                List<ListHourlyModelData> elo =
+                    hourlyWeatherData!.cast<ListHourlyModelData>();
 
                 return Text("sa");
               }

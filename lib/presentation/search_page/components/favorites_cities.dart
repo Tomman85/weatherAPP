@@ -31,8 +31,8 @@ class _FavoritesCitiesState extends State<FavoritesCities> {
     Response? response;
     try {
       isLoading = true;
-      response = await httpService
-          ?.getRequest("lat=$lat&lon=$lon&units=metric&appid=$openWeatherApi3");
+      response = await httpService?.getRequest(
+          "lat=$lat&lon=$lon&units=metric&exclude=minutely,hourly,daily,alerts&appid=$openWeatherApi4");
       isLoading = false;
 
       if (response?.statusCode == 200) {
@@ -59,8 +59,7 @@ class _FavoritesCitiesState extends State<FavoritesCities> {
     return ValueListenableBuilder(
         valueListenable: Hive.box(favCity).listenable(),
         builder: (context, value, _) {
-          final citiesList =
-              Hive.box(favCity).values.toList().cast<DataModel>();
+          final citiesList = Hive.box(favCity).values.toList();
 
           return Container(
             padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 10),
@@ -69,9 +68,6 @@ class _FavoritesCitiesState extends State<FavoritesCities> {
               itemCount: Hive.box(favCity).length,
               itemBuilder: (BuildContext context, int index) {
                 final item = citiesList[index];
-                print(item.cityName);
-                print(item.longitude);
-                print(item.latitude);
 
                 return Dismissible(
                   key: UniqueKey(),
@@ -79,11 +75,11 @@ class _FavoritesCitiesState extends State<FavoritesCities> {
                   onDismissed: (direction) {
                     if (direction == DismissDirection.startToEnd) {
                       setState(() {
+                        // citiesList.removeAt(index);
                         Hive.box(favCity).deleteAt(index);
                       });
                     } else if (direction == DismissDirection.endToStart) {
                       print('Dodaj do main page');
-
                     }
                   },
                   confirmDismiss: (DismissDirection direction) async {
@@ -126,7 +122,7 @@ class _FavoritesCitiesState extends State<FavoritesCities> {
                                 child: SingleChildScrollView(
                                   scrollDirection: Axis.horizontal,
                                   child: Text(
-                                    item.cityName.toString(),
+                                    "${item.cityName.toString()}",
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 20,
@@ -137,18 +133,17 @@ class _FavoritesCitiesState extends State<FavoritesCities> {
                               ),
                             ),
                           ),
+                          //TODO zbugowany futurebuilder/cos jest nie tak
                           FutureBuilder(
                             future: getCurrentWeather(
                               item.latitude.toString(),
                               item.longitude.toString(),
                             ),
-                            builder: (context, snapshot) {
+                            builder: (context, AsyncSnapshot snapshot) {
                               if (snapshot.hasData) {
-                                print(snapshot.data);
-                                WeatherModel? currentWeather = predictionModel;
                                 return Center(
                                   child: Text(
-                                    "${currentWeather!.temperature!.toStringAsFixed(1)} \u2103 ",
+                                    "${snapshot.data.temperature.toStringAsFixed(1)} \u2103 ",
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 20),
                                   ),
@@ -182,11 +177,16 @@ class _FavoritesCitiesState extends State<FavoritesCities> {
               "Czy jesteś pewny aby usunać miasto z listy ulubionych?"),
           actions: <Widget>[
             TextButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: const Text("Usuń")),
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text(
+                "Usuń",
+              ),
+            ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text("Anuluj"),
+              child: const Text(
+                "Anuluj",
+              ),
             ),
           ],
         );
