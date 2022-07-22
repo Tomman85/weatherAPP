@@ -64,105 +64,118 @@ class _FavoritesCitiesState extends State<FavoritesCities> {
           return Container(
             padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 10),
             height: 600,
-            child: ListView.builder(
-              itemCount: Hive.box(favCity).length,
-              itemBuilder: (BuildContext context, int index) {
-                final item = citiesList[index];
+            child: Hive.box(favCity).isEmpty
+                ? Text('Task na next week')
+                : ListView.builder(
+                    itemCount: Hive.box(favCity).length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final item = citiesList[index];
 
-                return Dismissible(
-                  key: UniqueKey(),
-                  direction: DismissDirection.startToEnd,
-                  onDismissed: (direction) {
-                    if (direction == DismissDirection.startToEnd) {
-                      setState(() {
-                        // citiesList.removeAt(index);
-                        Hive.box(favCity).deleteAt(index);
-                      });
-                    } else if (direction == DismissDirection.endToStart) {
-                      print('Dodaj do main page');
-                    }
-                  },
-                  confirmDismiss: (DismissDirection direction) async {
-                    return await buildShowDialog(context);
-                  },
-                  background: const DeleteAutocompleteBackground(),
-                  child: GestureDetector(
-                    onTap: () {
-                      Hive.box(mainCity).putAt(
-                        0,
-                        DataSingleModel(
-                          latitude: item.latitude,
-                          longitude: item.longitude,
-                          cityName: item.cityName,
-                        ),
-                      );
-                      setState(() {});
-                      Navigator.of(context).pop();
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.only(
-                        top: 15,
-                      ),
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      decoration: BoxDecoration(
-                        color: Colors.lightBlue.shade900,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: Colors.grey.shade300,
-                        ),
-                      ),
-                      height: 110,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: SizedBox(
-                                width: 200,
-                                child: SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Text(
-                                    "${item.cityName.toString()}",
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      overflow: TextOverflow.ellipsis,
+                      return Dismissible(
+                        key: UniqueKey(),
+                        direction: DismissDirection.startToEnd,
+                        onDismissed: (direction) {
+                          if (direction == DismissDirection.startToEnd) {
+                            setState(() {
+                              // citiesList.removeAt(index);
+                              Hive.box(favCity).deleteAt(index);
+                            });
+                          } else if (direction == DismissDirection.endToStart) {
+                            print('Dodaj do main page');
+                          }
+                        },
+                        confirmDismiss: (DismissDirection direction) async {
+                          return await buildShowDialog(context);
+                        },
+                        background: const DeleteAutocompleteBackground(),
+                        child: GestureDetector(
+                          onTap: () {
+                            Hive.box(mainCity).putAt(
+                              0,
+                              DataSingleModel(
+                                latitude: item.latitude,
+                                longitude: item.longitude,
+                                cityName: item.cityName,
+                              ),
+                            );
+
+                            Navigator.of(context).pop();
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.only(
+                              top: 15,
+                            ),
+                            padding: const EdgeInsets.only(left: 20, right: 20),
+                            decoration: BoxDecoration(
+                              color: Colors.lightBlue.shade800,
+                              // gradient: LinearGradient(
+                              //   begin: Alignment.topCenter,
+                              //   end: Alignment.bottomCenter,
+                              //   colors: [
+                              //     Colors.lightBlue,
+                              //     Colors.lightBlue.shade600,
+                              //   ],
+                              // ),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                            height: 110,
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: SizedBox(
+                                      width: 200,
+                                      child: SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        child: Text(
+                                          item.cityName.toString(),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ),
-                          //TODO zbugowany futurebuilder/cos jest nie tak
-                          FutureBuilder(
-                            future: getCurrentWeather(
-                              item.latitude.toString(),
-                              item.longitude.toString(),
-                            ),
-                            builder: (context, AsyncSnapshot snapshot) {
-                              if (snapshot.hasData) {
-                                return Center(
-                                  child: Text(
-                                    "${snapshot.data.temperature.toStringAsFixed(1)} \u2103 ",
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 20),
+                                FutureBuilder(
+                                  future: getCurrentWeather(
+                                    item.latitude.toString(),
+                                    item.longitude.toString(),
                                   ),
-                                );
-                              } else if (snapshot.hasError) {
-                                return Text('${snapshot.error}');
-                              }
+                                  builder: (context, AsyncSnapshot snapshot) {
+                                    if (snapshot.hasData) {
+                                      return Center(
+                                        child: Text(
+                                          "${snapshot.data.temperature.toStringAsFixed(0)} \u00B0",
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 25,
+                                          ),
+                                        ),
+                                      );
+                                    } else if (snapshot.hasError) {
+                                      return Text('${snapshot.error}');
+                                    }
 
-                              // By default, show a loading spinner.
-                              return const CircularProgressIndicator();
-                            },
+                                    // By default, show a loading spinner.
+                                    return const CircularProgressIndicator(
+                                      color: Colors.white,
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
-                    ),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
           );
         });
   }
