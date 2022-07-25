@@ -10,9 +10,9 @@ WeatherModel _$WeatherModelFromJson(Map<String, dynamic> json) => WeatherModel(
       windSpeed: (json['wind_speed'] as num?)?.toDouble(),
       temperature: (json['temp'] as num?)?.toDouble(),
     )
-      ..currentTime = (json['dt'] as num?)?.toDouble()
-      ..sunrise = (json['sunrise'] as num?)?.toDouble()
-      ..sunset = (json['sunset'] as num?)?.toDouble()
+      ..currentTime = json['dt'] as int?
+      ..sunrise = json['sunrise'] as int?
+      ..sunset = json['sunset'] as int?
       ..feelTemperature = (json['feels_like'] as num?)?.toDouble()
       ..pressure = (json['pressure'] as num?)?.toDouble()
       ..humidity = (json['humidity'] as num?)?.toDouble()

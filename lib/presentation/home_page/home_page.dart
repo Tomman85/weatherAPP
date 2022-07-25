@@ -12,6 +12,8 @@ import 'package:weather/presentation/models/openweather_model/weather_data_respo
 import 'package:weather/presentation/search_page/search_page.dart';
 import 'package:weather/presentation/services/http_openweather_service.dart';
 
+import 'components/main_page_weather_content.dart';
+
 class HomePage extends StatefulWidget {
   static const homePageRouteName = '/homepage';
 
@@ -63,82 +65,6 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       body: const MainPageWeatherContent(),
-    );
-  }
-}
-
-class MainPageWeatherContent extends StatefulWidget {
-  const MainPageWeatherContent({Key? key}) : super(key: key);
-
-  @override
-  State<MainPageWeatherContent> createState() => _MainPageWeatherContentState();
-}
-
-class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
-  HttpWeatherService? httpService;
-
-  ListWeatherDataModel? weatherDataResponse;
-
-  bool isLoading = false;
-
-  Future getWeatherData(lat, lon) async {
-    Response? response;
-    try {
-      isLoading = true;
-      response = await httpService
-          ?.getRequest("lat=$lat&lon=$lon&units=metric&appid=$openWeatherApi5");
-      isLoading = false;
-      if (response?.statusCode == 200) {
-        var elo = response?.data;
-        weatherDataResponse = ListWeatherDataModel.fromJson(response?.data);
-      } else {
-        print('not good');
-      }
-    } on Exception catch (e) {
-      isLoading = false;
-      print(e);
-    }
-    return weatherDataResponse;
-  }
-
-  @override
-  void initState() {
-    httpService = HttpWeatherService();
-    // Hive.openBox(mainCity);
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    var box = Hive.box(mainCity).getAt(0);
-    return FutureBuilder(
-      future: getWeatherData(
-        box.latitude,
-        box.longitude,
-      ),
-      builder: (
-        BuildContext context,
-        AsyncSnapshot snapshot,
-      ) {
-        print(snapshot.hasData.toString());
-// print(snapshot.data.hourlyWeatherModel.temperature.toString());
-        if (snapshot.hasData) {
-         var temp =  snapshot.data.dailyWeatherModel[0].temperature;
-         var _list = temp.values.toList();
-          return Center(
-            child: Text(
-              _list[0].toString()
-// "działa"
-            ),
-          );
-        } else {
-          return const Center(
-            child: Text(
-              "ładowanie",
-            ),
-          );
-        }
-      },
     );
   }
 }
