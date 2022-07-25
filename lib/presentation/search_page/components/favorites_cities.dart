@@ -8,7 +8,6 @@ import 'package:weather/presentation/models/hive_box_models/model_list_of_cities
 import 'package:weather/presentation/models/hive_box_models/model_single_city.dart';
 import 'package:weather/presentation/models/openweather_model/current_data_response.dart';
 import 'package:weather/presentation/models/openweather_model/weather_model.dart';
-import 'package:weather/presentation/models/openweather_model/hourly_data_response.dart';
 import 'package:weather/presentation/search_page/components/delete_autocomplete_background.dart';
 import 'package:weather/presentation/services/http_openweather_service.dart';
 
@@ -31,8 +30,8 @@ class _FavoritesCitiesState extends State<FavoritesCities> {
     Response? response;
     try {
       isLoading = true;
-      response = await httpService
-          ?.getRequest("lat=$lat&lon=$lon&units=metric&appid=$openWeatherApi3");
+      response = await httpService?.getRequest(
+          "lat=$lat&lon=$lon&units=metric&exclude=minutely,hourly,daily,alerts&appid=$openWeatherApi4");
       isLoading = false;
 
       if (response?.statusCode == 200) {
@@ -59,115 +58,123 @@ class _FavoritesCitiesState extends State<FavoritesCities> {
     return ValueListenableBuilder(
         valueListenable: Hive.box(favCity).listenable(),
         builder: (context, value, _) {
-          final citiesList =
-              Hive.box(favCity).values.toList().cast<DataModel>();
+          final citiesList = Hive.box(favCity).values.toList();
 
           return Container(
             padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 10),
             height: 600,
-            child: ListView.builder(
-              itemCount: Hive.box(favCity).length,
-              itemBuilder: (BuildContext context, int index) {
-                final item = citiesList[index];
-                print(item.cityName);
-                print(item.longitude);
-                print(item.latitude);
+            child: Hive.box(favCity).isEmpty
+                ? Text('Task na next week')
+                : ListView.builder(
+                    itemCount: Hive.box(favCity).length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final item = citiesList[index];
 
-                return Dismissible(
-                  key: UniqueKey(),
-                  direction: DismissDirection.startToEnd,
-                  onDismissed: (direction) {
-                    if (direction == DismissDirection.startToEnd) {
-                      setState(() {
-                        Hive.box(favCity).deleteAt(index);
-                      });
-                    } else if (direction == DismissDirection.endToStart) {
-                      print('Dodaj do main page');
-
-                    }
-                  },
-                  confirmDismiss: (DismissDirection direction) async {
-                    return await buildShowDialog(context);
-                  },
-                  background: const DeleteAutocompleteBackground(),
-                  child: GestureDetector(
-                    onTap: () {
-                      Hive.box(mainCity).putAt(
-                        0,
-                        DataSingleModel(
-                          latitude: item.latitude,
-                          longitude: item.longitude,
-                          cityName: item.cityName,
-                        ),
-                      );
-                      setState(() {});
-                      Navigator.of(context).pop();
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.only(
-                        top: 15,
-                      ),
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      decoration: BoxDecoration(
-                        color: Colors.lightBlue.shade900,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: Colors.grey.shade300,
-                        ),
-                      ),
-                      height: 110,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: SizedBox(
-                                width: 200,
-                                child: SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Text(
-                                    item.cityName.toString(),
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      overflow: TextOverflow.ellipsis,
+                      return Dismissible(
+                        key: UniqueKey(),
+                        direction: DismissDirection.startToEnd,
+                        onDismissed: (direction) {
+                          if (direction == DismissDirection.startToEnd) {
+                            setState(() {
+                              // citiesList.removeAt(index);
+                              Hive.box(favCity).deleteAt(index);
+                            });
+                          } else if (direction == DismissDirection.endToStart) {
+                            print('Dodaj do main page');
+                          }
+                        },
+                        confirmDismiss: (DismissDirection direction) async {
+                          return await buildShowDialog(context);
+                        },
+                        background: const DeleteAutocompleteBackground(),
+                        child: GestureDetector(
+                          onTap: () {
+                            Hive.box(mainCity).putAt(
+                              0,
+                              DataSingleModel(
+                                latitude: item.latitude,
+                                longitude: item.longitude,
+                                cityName: item.cityName,
+                              ),
+                            );
+                            setState(() {});
+                            Navigator.of(context).pop();
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.only(
+                              top: 15,
+                            ),
+                            padding: const EdgeInsets.only(left: 20, right: 20),
+                            decoration: BoxDecoration(
+                              color: Colors.lightBlue.shade800,
+                              // gradient: LinearGradient(
+                              //   begin: Alignment.topCenter,
+                              //   end: Alignment.bottomCenter,
+                              //   colors: [
+                              //     Colors.lightBlue,
+                              //     Colors.lightBlue.shade600,
+                              //   ],
+                              // ),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                            height: 110,
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: SizedBox(
+                                      width: 200,
+                                      child: SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        child: Text(
+                                          item.cityName.toString(),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ),
-                          FutureBuilder(
-                            future: getCurrentWeather(
-                              item.latitude.toString(),
-                              item.longitude.toString(),
-                            ),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                print(snapshot.data);
-                                WeatherModel? currentWeather = predictionModel;
-                                return Center(
-                                  child: Text(
-                                    "${currentWeather!.temperature!.toStringAsFixed(1)} \u2103 ",
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 20),
+                                FutureBuilder(
+                                  future: getCurrentWeather(
+                                    item.latitude.toString(),
+                                    item.longitude.toString(),
                                   ),
-                                );
-                              } else if (snapshot.hasError) {
-                                return Text('${snapshot.error}');
-                              }
+                                  builder: (context, AsyncSnapshot snapshot) {
+                                    if (snapshot.hasData) {
+                                      return Center(
+                                        child: Text(
+                                          "${snapshot.data.temperature.toStringAsFixed(0)} \u00B0",
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 25,
+                                          ),
+                                        ),
+                                      );
+                                    } else if (snapshot.hasError) {
+                                      return Text('${snapshot.error}');
+                                    }
 
-                              // By default, show a loading spinner.
-                              return const CircularProgressIndicator();
-                            },
+                                    // By default, show a loading spinner.
+                                    return const CircularProgressIndicator(
+                                      color: Colors.white,
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
-                    ),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
           );
         });
   }
@@ -182,11 +189,16 @@ class _FavoritesCitiesState extends State<FavoritesCities> {
               "Czy jesteś pewny aby usunać miasto z listy ulubionych?"),
           actions: <Widget>[
             TextButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: const Text("Usuń")),
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text(
+                "Usuń",
+              ),
+            ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text("Anuluj"),
+              child: const Text(
+                "Anuluj",
+              ),
             ),
           ],
         );

@@ -7,10 +7,38 @@ class WeatherModel{
   @JsonKey(name: "temp")
   double? temperature;
 
+
+
+  @JsonKey(name: "dt")
+  double? currentTime;
+
+  @JsonKey(name: "sunrise")
+  double? sunrise;
+  @JsonKey(name: "sunset")
+  double? sunset;
+
+
+  @JsonKey(name: "feels_like")
+  double? feelTemperature;
+
+  @JsonKey(name: "pressure")
+  double? pressure;
+
+  @JsonKey(name: "humidity")
+  double? humidity;
+  @JsonKey(name: "clouds")
+  double? clouds;
+
   @JsonKey(name: "wind_speed")
   double? windSpeed;
+  @JsonKey(name: "wind_deg")
+  double? windDegree;
 
-  WeatherModel({required this.temperature,required this.windSpeed});
+
+  @JsonKey(name: "uvi")
+  double? uv;
+
+  WeatherModel({required this.windSpeed,required this.temperature});
 
   factory WeatherModel.fromJson(Map<String, dynamic> json) =>
       _$WeatherModelFromJson(json);
