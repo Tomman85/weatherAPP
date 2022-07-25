@@ -10,12 +10,12 @@ class WeatherModel{
 
 
   @JsonKey(name: "dt")
-  double? currentTime;
+  int? currentTime;
 
   @JsonKey(name: "sunrise")
-  double? sunrise;
+  int? sunrise;
   @JsonKey(name: "sunset")
-  double? sunset;
+  int? sunset;
 
 
   @JsonKey(name: "feels_like")
