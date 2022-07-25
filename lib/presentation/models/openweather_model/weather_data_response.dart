@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:weather/presentation/models/openweather_model/daily_data_model.dart';
 
 import 'weather_model.dart';
 
@@ -11,9 +12,9 @@ class ListWeatherDataModel {
 
   @JsonKey(name: 'hourly')
   List<WeatherModel> hourlyWeatherModel;
-
+  //
   @JsonKey(name: 'daily')
-  List<WeatherModel> dailyWeatherModel;
+  List<DailyDataModel> dailyWeatherModel;
 
   ListWeatherDataModel({
     required this.currentWeatherModel,

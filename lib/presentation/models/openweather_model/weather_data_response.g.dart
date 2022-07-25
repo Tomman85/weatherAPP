@@ -15,7 +15,7 @@ ListWeatherDataModel _$ListWeatherDataModelFromJson(
           .map((e) => WeatherModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       dailyWeatherModel: (json['daily'] as List<dynamic>)
-          .map((e) => WeatherModel.fromJson(e as Map<String, dynamic>))
+          .map((e) => DailyDataModel.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 

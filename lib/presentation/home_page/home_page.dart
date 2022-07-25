@@ -86,13 +86,11 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
     try {
       isLoading = true;
       response = await httpService
-          ?.getRequest("lat=$lat&lon=$lon&units=metric&appid=$openWeatherApi4");
+          ?.getRequest("lat=$lat&lon=$lon&units=metric&appid=$openWeatherApi5");
       isLoading = false;
       if (response?.statusCode == 200) {
         var elo = response?.data;
-        print("dziala");
         weatherDataResponse = ListWeatherDataModel.fromJson(response?.data);
-
       } else {
         print('not good');
       }
@@ -123,14 +121,14 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
         AsyncSnapshot snapshot,
       ) {
         print(snapshot.hasData.toString());
-// print(snapshot.data.currentWeatherModel.temperature);
+// print(snapshot.data.hourlyWeatherModel.temperature.toString());
         if (snapshot.hasData) {
-
+         var temp =  snapshot.data.dailyWeatherModel[0].temperature;
+         var _list = temp.values.toList();
           return Center(
             child: Text(
-             ""
-              // snapshot.data.hourlyWeatherModel.temp,
-
+              _list[0].toString()
+// "działa"
             ),
           );
         } else {

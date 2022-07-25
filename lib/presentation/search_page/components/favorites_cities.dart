@@ -8,7 +8,6 @@ import 'package:weather/presentation/models/hive_box_models/model_list_of_cities
 import 'package:weather/presentation/models/hive_box_models/model_single_city.dart';
 import 'package:weather/presentation/models/openweather_model/current_data_response.dart';
 import 'package:weather/presentation/models/openweather_model/weather_model.dart';
-import 'package:weather/presentation/models/openweather_model/hourly_data_response.dart';
 import 'package:weather/presentation/search_page/components/delete_autocomplete_background.dart';
 import 'package:weather/presentation/services/http_openweather_service.dart';
 
@@ -98,7 +97,7 @@ class _FavoritesCitiesState extends State<FavoritesCities> {
                                 cityName: item.cityName,
                               ),
                             );
-
+                            setState(() {});
                             Navigator.of(context).pop();
                           },
                           child: Container(
