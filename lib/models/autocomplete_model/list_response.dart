@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:weather/presentation/models/autocomplete_model/prediction_model.dart';
+import 'package:weather/models/autocomplete_model/prediction_model.dart';
 
 part 'list_response.g.dart';
 

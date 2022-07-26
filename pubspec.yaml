@@ -44,6 +44,8 @@ dependencies:
   geolocator: ^9.0.1
   geocoding: ^2.0.4
   intl: ^0.17.0
+  get: ^4.6.5
+  country_icons: ^2.0.2
 
 
 dev_dependencies:

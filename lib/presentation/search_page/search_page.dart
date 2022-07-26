@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:weather/const/hive_box_names.dart';
 import 'package:weather/presentation/search_page/components/autocomplete.dart';
@@ -12,7 +13,7 @@ class SearchPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.black),
         elevation: 0.0,
         backgroundColor: Colors.white,
         actions: [
@@ -20,30 +21,30 @@ class SearchPage extends StatelessWidget {
               onPressed: () {
                 Hive.box(favCity).clear();
               },
-              icon: Icon(Icons.delete))
+              icon: const Icon(Icons.delete))
         ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          SizedBox(
+        children:  [
+         const  SizedBox(
             height: 20,
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Text(
-              "Zarządzaj miastami",
+              'cityManagement'.tr,
               textAlign: TextAlign.end,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 25,
               ),
             ),
           ),
-          SizedBox(
+         const  SizedBox(
             height: 20,
           ),
-          AutocompletePredictions(),
-          FavoritesCities(),
+          const AutocompletePredictions(),
+          const FavoritesCities(),
         ],
       ),
     );

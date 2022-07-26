@@ -5,13 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:weather/const/hive_box_names.dart';
-import 'package:weather/credentials.dart';
-
-import 'package:weather/presentation/models/openweather_model/weather_data_response.dart';
-
 import 'package:weather/presentation/search_page/search_page.dart';
-import 'package:weather/presentation/services/http_openweather_service.dart';
-
 import 'components/main_page_weather_content.dart';
 
 class HomePage extends StatefulWidget {
@@ -26,20 +20,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  HttpWeatherService? httpService;
-
-  @override
-  void initState() {
-    httpService = HttpWeatherService();
-    // Hive.openBox(mainCity);
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
-    // print(getWeatherData(50.122, 16.02232).);
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: ValueListenableBuilder(
           valueListenable: Hive.box(mainCity).listenable(),
           builder: (BuildContext context, value, Widget? child) {
