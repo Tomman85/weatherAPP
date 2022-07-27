@@ -24,9 +24,6 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
   Position? _position;
   String? _currentAddress;
 
-  bool? serviceEnabled;
-  LocationPermission? permission;
-
   void _getAutocompletePredictions(name, lang) async {
     isLoading = true;
     setState(() {});
@@ -185,8 +182,10 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
   }
 
   _getCurrentLocation() async {
+    bool? serviceEnabled;
+    LocationPermission? permission;
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled!) {
+    if (!serviceEnabled) {
       showDialog(
           context: context,
           builder: (_) => AlertDialog(

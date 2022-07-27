@@ -1,8 +1,4 @@
-import 'dart:developer';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:weather/const/hive_box_names.dart';
 import 'package:weather/presentation/search_page/search_page.dart';
@@ -26,16 +22,21 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         centerTitle: true,
         title: ValueListenableBuilder(
-          valueListenable: Hive.box(mainCity).listenable(),
+          valueListenable: Hive.box(favCity).listenable(),
           builder: (BuildContext context, value, Widget? child) {
-            var box = Hive.box(mainCity).getAt(0);
-            return Text(
-              box.cityName.toString().split(',')[0],
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 30,
-              ),
-            );
+            var box = Hive.box(favCity);
+
+            return box.isEmpty
+                ? Text(
+                    'brak',
+                  )
+                : Text(
+                    box.getAt(box.length - 1).cityName.toString().split(',')[0],
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                    ),
+                  );
           },
         ),
         elevation: 0.0,
