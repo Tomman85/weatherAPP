@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:weather/models/openweather_model/weather_desciption_model.dart';
 
 part 'weather_model.g.dart';
 
@@ -21,6 +22,11 @@ class WeatherModel {
   double? windDegree;
   @JsonKey(name: "uvi")
   double? uv;
+  @JsonKey(name: "timezone_offset")
+  int? timeOffset;
+
+  @JsonKey(name: "weather")
+  List<WeatherDescriptionModel>? weatherDescription;
 
   WeatherModel({required this.windSpeed, required this.temperature});
 

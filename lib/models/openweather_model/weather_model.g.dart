@@ -18,7 +18,12 @@ WeatherModel _$WeatherModelFromJson(Map<String, dynamic> json) => WeatherModel(
       ..humidity = (json['humidity'] as num?)?.toDouble()
       ..clouds = (json['clouds'] as num?)?.toDouble()
       ..windDegree = (json['wind_deg'] as num?)?.toDouble()
-      ..uv = (json['uvi'] as num?)?.toDouble();
+      ..uv = (json['uvi'] as num?)?.toDouble()
+      ..timeOffset = json['timezone_offset'] as int?
+      ..weatherDescription = (json['weather'] as List<dynamic>?)
+          ?.map((e) =>
+              WeatherDescriptionModel.fromJson(e as Map<String, dynamic>))
+          .toList();
 
 Map<String, dynamic> _$WeatherModelToJson(WeatherModel instance) =>
     <String, dynamic>{
@@ -33,4 +38,6 @@ Map<String, dynamic> _$WeatherModelToJson(WeatherModel instance) =>
       'wind_speed': instance.windSpeed,
       'wind_deg': instance.windDegree,
       'uvi': instance.uv,
+      'timezone_offset': instance.timeOffset,
+      'weather': instance.weatherDescription,
     };

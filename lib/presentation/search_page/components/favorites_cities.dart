@@ -24,10 +24,10 @@ class _FavoritesCitiesState extends State<FavoritesCities> {
     super.initState();
   }
 
-  Future _getCurrentWeatherData(lat, lon) async {
+  Future _getCurrentWeatherData(lat, lon,lang) async {
     isLoading = true;
     currentDataResponse =
-        await OpenweatherRepositoryService.getOpenweatherData(lat, lon);
+        await OpenweatherRepositoryService.getOpenweatherData(lat, lon,lang);
     isLoading = false;
     return currentDataResponse;
   }
@@ -114,6 +114,7 @@ class _FavoritesCitiesState extends State<FavoritesCities> {
                                   future: _getCurrentWeatherData(
                                     item.latitude.toString(),
                                     item.longitude.toString(),
+                                    "pl",
                                   ),
                                   builder: (context, AsyncSnapshot snapshot) {
                                     if (snapshot.hasData) {
