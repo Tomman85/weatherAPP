@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class HorizontalWeatherList extends StatelessWidget {
@@ -19,8 +20,10 @@ class HorizontalWeatherList extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       itemCount: data.hourlyWeatherModel.length,
       itemBuilder: (BuildContext context, int index) {
+        int currentTime = data.currentWeatherModel.currentTime;
         double itemTemperature = data.hourlyWeatherModel[index].temperature;
-        int itemTime = data.hourlyWeatherModel[index].currentTime + data.timeOffset - 7200;
+        int itemTime =
+            data.hourlyWeatherModel[index].currentTime + data.timeOffset - 7200;
         double itemWindAngle = data.hourlyWeatherModel[index].windDegree;
         String itemIcon =
             data.hourlyWeatherModel[index].weatherDescription[0].icon;
@@ -30,12 +33,21 @@ class HorizontalWeatherList extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                dateFormat.format(
-                  DateTime.fromMillisecondsSinceEpoch(itemTime * 1000 ),
-                ),
-                style: TextStyle(color: Colors.white.withOpacity(0.6)),
-              ),
+              currentTime < itemTime
+                  ? Text(
+                      dateFormat.format(
+                        DateTime.fromMillisecondsSinceEpoch(itemTime * 1000),
+                      ),
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.6),
+                      ),
+                    )
+                  : Text(
+                      'now'.tr,
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.6),
+                      ),
+                    ),
               const SizedBox(
                 height: 5,
               ),
@@ -49,7 +61,6 @@ class HorizontalWeatherList extends StatelessWidget {
                   height: 50,
                   child: Image.network(
                       "http://openweathermap.org/img/wn/$itemIcon@2x.png")),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

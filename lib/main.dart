@@ -8,7 +8,7 @@ import 'package:weather/services/network_services/network_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await hiveInitialization();
+  await HiveSetup.hiveInitialization();
 
   runApp(const MyApp());
 }

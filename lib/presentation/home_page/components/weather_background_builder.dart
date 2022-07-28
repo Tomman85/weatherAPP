@@ -1,9 +1,15 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_weather_bg_null_safety/bg/weather_bg.dart';
 import 'package:flutter_weather_bg_null_safety/utils/weather_type.dart';
 
-Widget buildChild(int id, width, height) {
+Widget buildChild(
+  int id,
+  width,
+  height,
+  int currentTime,
+  int sunrise,
+  int sunset,
+) {
   if (id >= 200 && id < 250) {
     return WeatherBg(
         weatherType: WeatherType.thunder, width: width, height: height);
@@ -34,6 +40,12 @@ Widget buildChild(int id, width, height) {
   } else if (id == 803 && id == 804) {
     return WeatherBg(
         weatherType: WeatherType.overcast, width: width, height: height);
+  } else if (id == 800 && (currentTime < sunrise || currentTime > sunset)) {
+    return WeatherBg(
+        weatherType: WeatherType.sunnyNight, width: width, height: height);
+  } else if (currentTime < sunrise || currentTime > sunset) {
+    return WeatherBg(
+        weatherType: WeatherType.cloudyNight, width: width, height: height);
   }
   return WeatherBg(
       weatherType: WeatherType.sunny, width: width, height: height);

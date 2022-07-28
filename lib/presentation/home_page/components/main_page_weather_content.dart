@@ -7,6 +7,7 @@ import 'package:weather/const/hive_box_names.dart';
 import 'package:weather/models/openweather_model/weather_data_response.dart';
 import 'package:intl/intl.dart';
 import 'package:weather/presentation/home_page/components/weather_background_builder.dart';
+import 'package:weather/presentation/search_page/search_page.dart';
 import 'package:weather/services/repository_services/openweather_repository_service/openweather_repository_service.dart';
 import 'current_weather_box.dart';
 import 'horizontal_weather_list.dart';
@@ -48,7 +49,13 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
         var box = Hive.box(favCity);
 
         return box.isEmpty
-            ? const Text('empty TODO')
+            ? Center(
+                child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context)
+                          .pushNamed(SearchPage.searchPageRouteName);
+                    },
+                    child: const Text('empty TODO KLIKAJ W TO ')))
             : FutureBuilder(
                 future: _getWeatherData(
                     box.getAt(Hive.box(favCity).length - 1).latitude,
@@ -63,6 +70,7 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
                     double windConverter =
                         ((data.currentWeatherModel.windSpeed * 1 / 1000) /
                             (1 / 3600));
+
                     return Container(
                       color: Colors.blue.shade200,
                       width: double.infinity,
@@ -72,6 +80,9 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
                             data.currentWeatherModel.weatherDescription[0].id,
                             size.width,
                             size.height,
+                            data.currentWeatherModel.currentTime,
+                            data.currentWeatherModel.sunrise,
+                            data.currentWeatherModel.sunset,
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 130.0),
@@ -102,6 +113,7 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
                                   SizedBox(
                                     height: size.height * 0.2,
                                     child: ListView.builder(
+                                      padding: EdgeInsets.zero,
                                       itemCount: data.dailyWeatherModel.length,
                                       itemBuilder:
                                           (BuildContext context, int index) {

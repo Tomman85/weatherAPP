@@ -24,10 +24,11 @@ class LocaleString extends Translations {
               'Location permissions are permanently denied, we cannot request permissions.',
           'ok': 'OK',
           'language': 'en',
+          'now': 'Now',
         },
         'pl_PL': {
-          'sunrise': 'Wschód',
-          'sunset': 'Zachód',
+          'sunrise': 'Wschód słońca',
+          'sunset': 'Zachód słońca',
           'feelTemperature': 'Odczuwalnie',
           'humidity': 'Wilgotność',
           'indexUV': 'UV Index',
@@ -47,6 +48,7 @@ class LocaleString extends Translations {
               'Uprawnienia dotyczące lokalizacji są trwale wyłączone, nie możemy prosić o uprawnienia.',
           'ok': 'OK',
           'language': 'pl',
+          'now': 'Teraz',
         }
       };
 }

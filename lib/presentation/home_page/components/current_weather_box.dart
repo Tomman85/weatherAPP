@@ -22,7 +22,7 @@ class CurrentWeatherBox extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
       decoration: BoxDecoration(
-        color: Colors.blue.shade300,
+        color: Colors.white.withOpacity(0.1),
         borderRadius: BorderRadius.circular(
           20,
         ),
@@ -41,19 +41,25 @@ class CurrentWeatherBox extends StatelessWidget {
                   DateTime.fromMillisecondsSinceEpoch(
                       (data.currentWeatherModel.sunrise +
                               data.timeOffset -
-                              7200) * 1000),
+                              7200) *
+                          1000),
                 )}",
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: Colors.white70,
+                  fontSize: 10,
                 ),
               ),
               Text(
                 "${'sunset'.tr}  ${dateFormat.format(
                   DateTime.fromMillisecondsSinceEpoch(
-                      (data.currentWeatherModel.sunset + data.timeOffset-7200) * 1000),
+                      (data.currentWeatherModel.sunset +
+                              data.timeOffset -
+                              7200) *
+                          1000),
                 )}",
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: Colors.white70,
+                  fontSize: 10,
                 ),
               ),
             ],
