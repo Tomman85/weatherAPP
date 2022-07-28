@@ -20,7 +20,6 @@ DailyDataModel _$DailyDataModelFromJson(Map<String, dynamic> json) =>
       ..windSpeed = (json['wind_speed'] as num?)?.toDouble()
       ..windDegree = (json['wind_deg'] as num?)?.toDouble()
       ..uv = (json['uvi'] as num?)?.toDouble()
-      ..timeOffset = json['timezone_offset'] as int?
       ..weatherDescription = (json['weather'] as List<dynamic>?)
           ?.map((e) =>
               WeatherDescriptionModel.fromJson(e as Map<String, dynamic>))
@@ -38,6 +37,5 @@ Map<String, dynamic> _$DailyDataModelToJson(DailyDataModel instance) =>
       'wind_speed': instance.windSpeed,
       'wind_deg': instance.windDegree,
       'uvi': instance.uv,
-      'timezone_offset': instance.timeOffset,
       'weather': instance.weatherDescription,
     };

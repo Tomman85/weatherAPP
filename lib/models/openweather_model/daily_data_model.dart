@@ -22,8 +22,7 @@ class DailyDataModel {
   double? windDegree;
   @JsonKey(name: "uvi")
   double? uv;
-  @JsonKey(name: "timezone_offset")
-  int? timeOffset;
+
 
   @JsonKey(name: "weather")
   List<WeatherDescriptionModel>? weatherDescription;

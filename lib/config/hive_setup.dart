@@ -18,7 +18,5 @@ Future<void> hiveInitialization() async {
   await Hive.openBox(
     favCity,
   );
-  await Hive.openBox(
-    mainCity,
-  );
+
 }

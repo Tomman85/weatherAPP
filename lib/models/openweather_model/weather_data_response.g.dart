@@ -17,7 +17,7 @@ ListWeatherDataModel _$ListWeatherDataModelFromJson(
       dailyWeatherModel: (json['daily'] as List<dynamic>)
           .map((e) => DailyDataModel.fromJson(e as Map<String, dynamic>))
           .toList(),
-    );
+    )..timeOffset = json['timezone_offset'] as int?;
 
 Map<String, dynamic> _$ListWeatherDataModelToJson(
         ListWeatherDataModel instance) =>
@@ -25,4 +25,5 @@ Map<String, dynamic> _$ListWeatherDataModelToJson(
       'current': instance.currentWeatherModel,
       'hourly': instance.hourlyWeatherModel,
       'daily': instance.dailyWeatherModel,
+      'timezone_offset': instance.timeOffset,
     };

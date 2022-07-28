@@ -20,7 +20,7 @@ class HorizontalWeatherList extends StatelessWidget {
       itemCount: data.hourlyWeatherModel.length,
       itemBuilder: (BuildContext context, int index) {
         double itemTemperature = data.hourlyWeatherModel[index].temperature;
-        int itemTime = data.hourlyWeatherModel[index].currentTime;
+        int itemTime = data.hourlyWeatherModel[index].currentTime + data.timeOffset - 7200;
         double itemWindAngle = data.hourlyWeatherModel[index].windDegree;
         String itemIcon =
             data.hourlyWeatherModel[index].weatherDescription[0].icon;
@@ -32,7 +32,7 @@ class HorizontalWeatherList extends StatelessWidget {
             children: [
               Text(
                 dateFormat.format(
-                  DateTime.fromMillisecondsSinceEpoch(itemTime * 1000),
+                  DateTime.fromMillisecondsSinceEpoch(itemTime * 1000 ),
                 ),
                 style: TextStyle(color: Colors.white.withOpacity(0.6)),
               ),

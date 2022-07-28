@@ -16,6 +16,9 @@ class ListWeatherDataModel {
   @JsonKey(name: 'daily')
   List<DailyDataModel> dailyWeatherModel;
 
+  @JsonKey(name: "timezone_offset")
+  int? timeOffset;
+
   ListWeatherDataModel({
     required this.currentWeatherModel,
     required this.hourlyWeatherModel,

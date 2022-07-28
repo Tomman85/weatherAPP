@@ -45,7 +45,7 @@ dependencies:
   geocoding: ^2.0.4
   intl: ^0.17.0
   get: ^4.6.5
-  country_icons: ^2.0.2
+  flutter_weather_bg_null_safety: ^1.0.0
 
 
 dev_dependencies:

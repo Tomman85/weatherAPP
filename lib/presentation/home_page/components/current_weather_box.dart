@@ -17,7 +17,6 @@ class CurrentWeatherBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -40,9 +39,10 @@ class CurrentWeatherBox extends StatelessWidget {
               Text(
                 "${'sunrise'.tr} ${dateFormat.format(
                   DateTime.fromMillisecondsSinceEpoch(
-                      data.currentWeatherModel.sunrise * 1000),
+                      (data.currentWeatherModel.sunrise +
+                              data.timeOffset -
+                              7200) * 1000),
                 )}",
-
                 style: const TextStyle(
                   color: Colors.white,
                 ),
@@ -50,7 +50,7 @@ class CurrentWeatherBox extends StatelessWidget {
               Text(
                 "${'sunset'.tr}  ${dateFormat.format(
                   DateTime.fromMillisecondsSinceEpoch(
-                      (data.currentWeatherModel.sunset) * 1000),
+                      (data.currentWeatherModel.sunset + data.timeOffset-7200) * 1000),
                 )}",
                 style: const TextStyle(
                   color: Colors.white,

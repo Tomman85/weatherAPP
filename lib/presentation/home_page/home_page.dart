@@ -19,6 +19,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar:true,
       appBar: AppBar(
         centerTitle: true,
         title: ValueListenableBuilder(
@@ -40,7 +41,7 @@ class _HomePageState extends State<HomePage> {
           },
         ),
         elevation: 0.0,
-        backgroundColor: Colors.blue.shade200,
+        backgroundColor: Colors.transparent,
         leading: GestureDetector(
           onTap: () {
             Navigator.of(context).pushNamed(
