@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class MainCurrentWeather extends StatelessWidget {
   const MainCurrentWeather({
     Key? key,

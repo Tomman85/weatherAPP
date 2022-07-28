@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_weather_bg_null_safety/bg/weather_bg.dart';
-import 'package:flutter_weather_bg_null_safety/utils/weather_type.dart';
+
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:weather/const/hive_box_names.dart';
@@ -34,11 +33,6 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
   }
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     final DateFormat hourlyDateFormat = DateFormat.Hm();
@@ -46,7 +40,7 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
     return ValueListenableBuilder(
       valueListenable: Hive.box(favCity).listenable(),
       builder: (BuildContext context, Box<dynamic> value, Widget? child) {
-        var box = Hive.box(favCity);
+        Box box = Hive.box(favCity);
 
         return box.isEmpty
             ? Center(
@@ -55,7 +49,8 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
                       Navigator.of(context)
                           .pushNamed(SearchPage.searchPageRouteName);
                     },
-                    child: const Text('empty TODO KLIKAJ W TO ')))
+                    child:
+                        const Text('empty TODO KLIKAJ W TO JAK JEST PUSTO ')))
             : FutureBuilder(
                 future: _getWeatherData(
                     box.getAt(Hive.box(favCity).length - 1).latitude,
@@ -76,7 +71,7 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
                       width: double.infinity,
                       child: Stack(
                         children: [
-                          buildChild(
+                          WeatherBackgroundBuilder.buildChild(
                             data.currentWeatherModel.weatherDescription[0].id,
                             size.width,
                             size.height,
