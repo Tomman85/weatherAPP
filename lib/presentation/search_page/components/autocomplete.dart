@@ -8,6 +8,7 @@ import 'package:weather/models/autocomplete_model/list_response.dart';
 import 'package:weather/models/autocomplete_model/prediction_model.dart';
 import 'package:weather/models/hive_box_models/model_list_of_cities.dart';
 import 'package:weather/services/repository_services/autocomplete_repository_service/autocomplete_repository_service.dart';
+import 'package:weather/utils/custom_typography.dart';
 
 class AutocompletePredictions extends StatefulWidget {
   const AutocompletePredictions({Key? key}) : super(key: key);
@@ -165,7 +166,7 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
                               : ListTile(
                                   title: Text(
                                     option.formatted.toString(),
-                                    style: const TextStyle(color: Colors.black),
+                                    style: CustomTypography.textStyleAutocompleteBasic,
                                   ),
                                 ),
                         );
@@ -181,7 +182,7 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
     );
   }
 
-  _getCurrentLocation() async {
+  void _getCurrentLocation() async {
     bool? serviceEnabled;
     LocationPermission? permission;
     serviceEnabled = await Geolocator.isLocationServiceEnabled();

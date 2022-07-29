@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather/utils/custom_typography.dart';
 
 class MainCurrentWeather extends StatelessWidget {
   const MainCurrentWeather({
@@ -10,31 +11,23 @@ class MainCurrentWeather extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "${data.currentWeatherModel.temperature.toStringAsFixed(0)} ",
-          style: const TextStyle(
-            fontSize: 120,
-            color: Colors.white,
-          ),
-          textAlign: TextAlign.end,
+    //TODO Dodac jakiś background, nie widać napisu na białym tle
+    return RichText(
+      text: TextSpan(children: [
+        TextSpan(
+          text: data.currentWeatherModel.temperature.toStringAsFixed(0),
+          style: CustomTypography.textStyleCurrentMain,
         ),
-        const Padding(
-          padding: EdgeInsets.only(
-            top: 15,
-          ),
-          child: Text(
-            "\u2103",
-            style: TextStyle(
-              fontSize: 25,
-              color: Colors.white,
+        WidgetSpan(
+          child: Transform.translate(
+            offset: const Offset(2, -60),
+            child: Text(
+              '\u2103',
+              style: CustomTypography.textStyleCurrentDegree,
             ),
           ),
         ),
-      ],
+      ]),
     );
   }
 }

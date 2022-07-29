@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:weather/utils/custom_typography.dart';
 
 class DeleteAutocompleteBackground extends StatelessWidget {
   const DeleteAutocompleteBackground({
@@ -20,10 +21,7 @@ class DeleteAutocompleteBackground extends StatelessWidget {
           ),
           Text(
             "moveToDelete".tr,
-            style: const TextStyle(
-              color: Colors.red,
-              fontSize: 18,
-            ),
+            style: CustomTypography.textStyleRemove,
           )
         ],
       ),

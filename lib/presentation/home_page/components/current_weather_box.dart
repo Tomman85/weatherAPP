@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
+import 'package:weather/presentation/home_page/components/build_current_weather_box_row.dart';
+import 'package:weather/utils/custom_typography.dart';
 import 'package:weather/utils/dataCustomFormat.dart';
 
 class CurrentWeatherBox extends StatelessWidget {
@@ -13,11 +14,12 @@ class CurrentWeatherBox extends StatelessWidget {
   final Size size;
   final dynamic data;
 
+  //TODO Dodana tu jeszcze bedzie ilustracja słońca
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
       margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.1),
@@ -28,9 +30,6 @@ class CurrentWeatherBox extends StatelessWidget {
       height: size.height * 0.4,
       child: Column(
         children: [
-          SizedBox(
-            height: size.height * 0.1,
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -50,97 +49,33 @@ class CurrentWeatherBox extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(
-            height: 40,
+          Spacer(),
+          BuildCurrentWeatherBoxRow(
+            style: CustomTypography.textStyleDetailedRowTitle,
+            firstColumnData: "feelTemperature".tr,
+            secondColumnData: "humidity".tr,
           ),
-          Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    "feelTemperature".tr,
-                    style: const TextStyle(color: Colors.white54),
-                  ),
-                  SizedBox(
-                    width: size.width * 0.3,
-                  ),
-                  Text(
-                    "humidity".tr,
-                    style: const TextStyle(color: Colors.white54),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    "${data.currentWeatherModel.feelTemperature.toStringAsFixed(0)} \u2103",
-                    style: const TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                  SizedBox(
-                    width: size.width * 0.4,
-                  ),
-                  Text(
-                    "${data.currentWeatherModel.humidity.toStringAsFixed(0)} %",
-                    style: const TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                ],
-              ),
-            ],
+          BuildCurrentWeatherBoxRow(
+            style: CustomTypography.textStyleDetailedRowSubtitle,
+            firstColumnData:
+                "${data.currentWeatherModel.feelTemperature.toStringAsFixed(0)} \u2103",
+            secondColumnData:
+                "${data.currentWeatherModel.humidity.toStringAsFixed(0)} %",
           ),
-          const SizedBox(
-            height: 30,
+          Spacer(),
+          BuildCurrentWeatherBoxRow(
+            style: CustomTypography.textStyleDetailedRowTitle,
+            firstColumnData: "indexUV".tr,
+            secondColumnData: "pressure".tr,
           ),
-          Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    "indexUV".tr,
-                    style: const TextStyle(
-                      color: Colors.white54,
-                    ),
-                  ),
-                  SizedBox(
-                    width: size.width * 0.35,
-                  ),
-                  Text(
-                    "pressure".tr,
-                    style: const TextStyle(
-                      color: Colors.white54,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    "${data.currentWeatherModel.uv.toStringAsFixed(0)}   ",
-                    style: const TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(
-                    width: size.width * 0.45,
-                  ),
-                  Text(
-                    "${data.currentWeatherModel.pressure.toStringAsFixed(0)} hPa",
-                    style: const TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ],
+          BuildCurrentWeatherBoxRow(
+            style: CustomTypography.textStyleDetailedRowSubtitle,
+            firstColumnData:
+                "${data.currentWeatherModel.uv.toStringAsFixed(0)}",
+            secondColumnData:
+                "${data.currentWeatherModel.pressure.toStringAsFixed(0)} hPa",
           ),
+          Spacer(),
         ],
       ),
     );

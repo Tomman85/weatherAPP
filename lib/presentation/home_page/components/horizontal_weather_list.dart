@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:weather/utils/custom_typography.dart';
 import 'package:weather/utils/dataCustomFormat.dart';
 
 class HorizontalWeatherList extends StatelessWidget {
+  final dynamic data;
+  final double windConverter;
+
   const HorizontalWeatherList({
     Key? key,
     required this.data,
     required this.windConverter,
   }) : super(key: key);
-
-  final dynamic data;
-  final double windConverter;
-
 
   @override
   Widget build(BuildContext context) {
@@ -27,33 +27,28 @@ class HorizontalWeatherList extends StatelessWidget {
         double itemWindAngle = data.hourlyWeatherModel[index].windDegree;
         String itemIcon =
             data.hourlyWeatherModel[index].weatherDescription[0].icon;
+        int timeOffset = data.timeOffset;
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              currentTime < itemTime
+              //TODO zmienic 7200 na czas lokalny/offset lokalny
+              currentTime - 7200 + timeOffset < itemTime
                   ? Text(
                       DataCustomFormat.getCustomDateFormat(itemTime),
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.6),
-                      ),
+                      style: CustomTypography.textStyleHour,
                     )
                   : Text(
                       'now'.tr,
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.6),
-                      ),
+                      style: CustomTypography.textStyleHour,
                     ),
               const SizedBox(
                 height: 5,
               ),
-              Text(
-                "${itemTemperature.toStringAsFixed(0)}\u00B0",
-                style: const TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.bold),
-              ),
+              Text("${itemTemperature.toStringAsFixed(0)}\u00B0",
+                  style: CustomTypography.textStyleHourTemp),
               SizedBox(
                   width: 50,
                   height: 50,
@@ -72,10 +67,7 @@ class HorizontalWeatherList extends StatelessWidget {
                   ),
                   Text(
                     "${windConverter.toStringAsFixed(1)} km/h",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                    ),
+                    style:  CustomTypography.textStyleWindSpeed,
                   ),
                 ],
               ),
