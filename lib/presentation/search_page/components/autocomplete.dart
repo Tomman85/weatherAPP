@@ -8,6 +8,7 @@ import 'package:weather/models/autocomplete_model/list_response.dart';
 import 'package:weather/models/autocomplete_model/prediction_model.dart';
 import 'package:weather/models/hive_box_models/model_list_of_cities.dart';
 import 'package:weather/services/repository_services/autocomplete_repository_service/autocomplete_repository_service.dart';
+import 'package:weather/utils/autocomplete_show_dialog.dart';
 import 'package:weather/utils/custom_typography.dart';
 
 class AutocompletePredictions extends StatefulWidget {
@@ -166,7 +167,8 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
                               : ListTile(
                                   title: Text(
                                     option.formatted.toString(),
-                                    style: CustomTypography.textStyleAutocompleteBasic,
+                                    style: CustomTypography
+                                        .textStyleAutocompleteBasic,
                                   ),
                                 ),
                         );
@@ -187,20 +189,13 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
     LocationPermission? permission;
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      showDialog(
-          context: context,
-          builder: (_) => AlertDialog(
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('ok'.tr),
-                  ),
-                ],
-                title: Text('Caution'.tr),
-                content: Text('disableContent'.tr),
-              ));
+      AutocompleteShowDialog.showCustomDialog(
+        context: context,
+        titleText: 'Caution'.tr,
+        contentText: 'disableContent'.tr,
+        childText: 'ok'.tr,
+      );
+
       return Future.error('Location services are disabled.');
     }
 
@@ -208,38 +203,21 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
     permission = await Geolocator.requestPermission();
 
     if (permission == LocationPermission.denied) {
-      showDialog(
-          context: context,
-          builder: (_) => AlertDialog(
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('ok'.tr),
-                  ),
-                ],
-                title: Text('Caution'.tr),
-                content: Text('deniedContent'.tr),
-              ));
+      AutocompleteShowDialog.showCustomDialog(
+        context: context,
+        titleText:'Caution'.tr,
+        contentText:'deniedContent'.tr,
+        childText: 'ok'.tr,
+      );
       return Future.error('Location permissions are denied');
     }
 
     if (permission == LocationPermission.deniedForever) {
-      showDialog(
+      AutocompleteShowDialog.showCustomDialog(
         context: context,
-        builder: (_) => AlertDialog(
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('ok'.tr),
-            ),
-          ],
-          title: Text('caution'.tr),
-          content: Text('permanentlyDeniedContent'.tr),
-        ),
+        titleText: 'Caution'.tr,
+        contentText: 'permanentlyDeniedContent'.tr,
+        childText: 'ok'.tr,
       );
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
