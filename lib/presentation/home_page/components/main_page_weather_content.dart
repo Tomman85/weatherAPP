@@ -4,11 +4,11 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:weather/const/hive_box_names.dart';
 import 'package:weather/models/openweather_model/weather_data_response.dart';
-import 'package:intl/intl.dart';
 import 'package:weather/presentation/home_page/components/weather_background_builder.dart';
 import 'package:weather/presentation/search_page/search_page.dart';
 import 'package:weather/services/repository_services/openweather_repository_service/openweather_repository_service.dart';
 import 'current_weather_box.dart';
+import 'daily_weather_list.dart';
 import 'horizontal_weather_list.dart';
 import 'main_current_weather.dart';
 
@@ -35,8 +35,7 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    final DateFormat hourlyDateFormat = DateFormat.Hm();
-    final DateFormat dateFormat = DateFormat.MEd();
+
     return ValueListenableBuilder(
       valueListenable: Hive.box(favCity).listenable(),
       builder: (BuildContext context, Box<dynamic> value, Widget? child) {
@@ -101,50 +100,13 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
                                     height: size.height * 0.2,
                                     child: HorizontalWeatherList(
                                       data: data,
-                                      dateFormat: hourlyDateFormat,
                                       windConverter: windConverter,
                                     ),
                                   ),
                                   SizedBox(
                                     height: size.height * 0.2,
-                                    child: ListView.builder(
-                                      padding: EdgeInsets.zero,
-                                      itemCount: data.dailyWeatherModel.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        String itemIcon = data
-                                            .dailyWeatherModel[index]
-                                            .weatherDescription[0]
-                                            .icon;
-                                        int itemDateTime = data
-                                            .dailyWeatherModel[index]
-                                            .currentTime;
-                                        double itemDayTemperature = data
-                                            .dailyWeatherModel[index]
-                                            .temperature['day'];
-                                        double itemNightTemperature = data
-                                            .dailyWeatherModel[index]
-                                            .temperature['night'];
-                                        return ListTile(
-                                          trailing: Text(
-                                            "${itemDayTemperature.toStringAsFixed(0)}\u00B0 / ${itemNightTemperature.toStringAsFixed(0)}\u00B0",
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                          leading: Image.network(
-                                              "http://openweathermap.org/img/wn/$itemIcon@2x.png"),
-                                          title: Text(
-                                            " ${dateFormat.format(
-                                              DateTime
-                                                  .fromMillisecondsSinceEpoch(
-                                                      itemDateTime * 1000),
-                                            )}",
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        );
-                                      },
+                                    child: DailyWeatherList(
+                                      data: data,
                                     ),
                                   ),
                                   const SizedBox(
@@ -152,7 +114,6 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
                                   ),
                                   CurrentWeatherBox(
                                     size: size,
-                                    dateFormat: hourlyDateFormat,
                                     data: data,
                                   ),
                                 ],
@@ -165,7 +126,7 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
                   } else {
                     return const Center(
                       child: Text(
-                        "ładowanie",
+                        "ładowanie todo SPLASH SCREEN MUST HAVE",
                       ),
                     );
                   }

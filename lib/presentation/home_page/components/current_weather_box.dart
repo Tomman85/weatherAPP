@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:weather/utils/dataCustomFormat.dart';
 
 class CurrentWeatherBox extends StatelessWidget {
   const CurrentWeatherBox({
     Key? key,
     required this.size,
-    required this.dateFormat,
     required this.data,
   }) : super(key: key);
 
   final Size size;
-  final DateFormat dateFormat;
-
   final dynamic data;
 
   @override
@@ -37,26 +35,14 @@ class CurrentWeatherBox extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(
-                "${'sunrise'.tr} ${dateFormat.format(
-                  DateTime.fromMillisecondsSinceEpoch(
-                      (data.currentWeatherModel.sunrise +
-                              data.timeOffset -
-                              7200) *
-                          1000),
-                )}",
+                "${'sunrise'.tr} ${DataCustomFormat.getCustomDateFormat(data.currentWeatherModel.sunrise + data.timeOffset - 7200)}",
                 style: const TextStyle(
                   color: Colors.white70,
                   fontSize: 10,
                 ),
               ),
               Text(
-                "${'sunset'.tr}  ${dateFormat.format(
-                  DateTime.fromMillisecondsSinceEpoch(
-                      (data.currentWeatherModel.sunset +
-                              data.timeOffset -
-                              7200) *
-                          1000),
-                )}",
+                "${'sunset'.tr} ${DataCustomFormat.getCustomDateFormat(data.currentWeatherModel.sunset + data.timeOffset - 7200)}",
                 style: const TextStyle(
                   color: Colors.white70,
                   fontSize: 10,

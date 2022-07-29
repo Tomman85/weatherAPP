@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:weather/utils/dataCustomFormat.dart';
 
 class HorizontalWeatherList extends StatelessWidget {
   const HorizontalWeatherList({
     Key? key,
     required this.data,
-    required this.dateFormat,
     required this.windConverter,
   }) : super(key: key);
 
   final dynamic data;
-  final DateFormat dateFormat;
   final double windConverter;
+
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +35,7 @@ class HorizontalWeatherList extends StatelessWidget {
             children: [
               currentTime < itemTime
                   ? Text(
-                      dateFormat.format(
-                        DateTime.fromMillisecondsSinceEpoch(itemTime * 1000),
-                      ),
+                      DataCustomFormat.getCustomDateFormat(itemTime),
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.6),
                       ),
