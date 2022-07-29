@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weather/utils/custom_typography.dart';
-import 'package:weather/utils/dataCustomFormat.dart';
+import 'package:weather/utils/data_custom_format.dart';
 
 class DailyWeatherList extends StatelessWidget {
   const DailyWeatherList({

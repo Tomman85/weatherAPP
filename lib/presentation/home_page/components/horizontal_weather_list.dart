@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:weather/utils/custom_typography.dart';
-import 'package:weather/utils/dataCustomFormat.dart';
+import 'package:weather/utils/data_custom_format.dart';
 
 class HorizontalWeatherList extends StatelessWidget {
   final dynamic data;

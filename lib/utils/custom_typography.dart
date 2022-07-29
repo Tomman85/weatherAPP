@@ -49,4 +49,9 @@ class CustomTypography {
   );
   static TextStyle textStyleDetailedRowTitle =
       const TextStyle(color: Colors.white54);
+
+  static TextStyle textStyleDetailedRowTime = const TextStyle(
+    color: Colors.white70,
+    fontSize: 10,
+  );
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:weather/presentation/home_page/components/build_current_weather_box_row.dart';
 import 'package:weather/utils/custom_typography.dart';
-import 'package:weather/utils/dataCustomFormat.dart';
+import 'package:weather/utils/data_custom_format.dart';
 
 class CurrentWeatherBox extends StatelessWidget {
   const CurrentWeatherBox({
@@ -14,7 +14,7 @@ class CurrentWeatherBox extends StatelessWidget {
   final Size size;
   final dynamic data;
 
-  //TODO Dodana tu jeszcze bedzie ilustracja słońca
+  //TODO Dodana tu jeszcze bedzie animacja słońca
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,26 +30,15 @@ class CurrentWeatherBox extends StatelessWidget {
       height: size.height * 0.4,
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Text(
+          const Spacer(),
+          BuildCurrentWeatherBoxRow(
+            style: CustomTypography.textStyleDetailedRowTime,
+            firstColumnData:
                 "${'sunrise'.tr} ${DataCustomFormat.getCustomDateFormat(data.currentWeatherModel.sunrise + data.timeOffset - 7200)}",
-                style: const TextStyle(
-                  color: Colors.white70,
-                  fontSize: 10,
-                ),
-              ),
-              Text(
+            secondColumnData:
                 "${'sunset'.tr} ${DataCustomFormat.getCustomDateFormat(data.currentWeatherModel.sunset + data.timeOffset - 7200)}",
-                style: const TextStyle(
-                  color: Colors.white70,
-                  fontSize: 10,
-                ),
-              ),
-            ],
           ),
-          Spacer(),
+          const Spacer(),
           BuildCurrentWeatherBoxRow(
             style: CustomTypography.textStyleDetailedRowTitle,
             firstColumnData: "feelTemperature".tr,
@@ -62,7 +51,7 @@ class CurrentWeatherBox extends StatelessWidget {
             secondColumnData:
                 "${data.currentWeatherModel.humidity.toStringAsFixed(0)} %",
           ),
-          Spacer(),
+          const Spacer(),
           BuildCurrentWeatherBoxRow(
             style: CustomTypography.textStyleDetailedRowTitle,
             firstColumnData: "indexUV".tr,
@@ -75,7 +64,7 @@ class CurrentWeatherBox extends StatelessWidget {
             secondColumnData:
                 "${data.currentWeatherModel.pressure.toStringAsFixed(0)} hPa",
           ),
-          Spacer(),
+          const Spacer(),
         ],
       ),
     );
