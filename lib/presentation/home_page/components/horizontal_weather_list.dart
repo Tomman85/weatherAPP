@@ -20,14 +20,12 @@ class HorizontalWeatherList extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       itemCount: data.hourlyWeatherModel.length,
       itemBuilder: (BuildContext context, int index) {
-        int currentTime = data.currentWeatherModel.currentTime;
         double itemTemperature = data.hourlyWeatherModel[index].temperature;
         int itemTime =
-            data.hourlyWeatherModel[index].currentTime + data.timeOffset - 7200;
+            data.hourlyWeatherModel[index].currentTime + data.timeOffset;
         double itemWindAngle = data.hourlyWeatherModel[index].windDegree;
         String itemIcon =
             data.hourlyWeatherModel[index].weatherDescription[0].icon;
-        int timeOffset = data.timeOffset;
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           child: Column(
@@ -35,15 +33,15 @@ class HorizontalWeatherList extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               //TODO zmienic 7200 na czas lokalny/offset lokalny
-              currentTime - 7200 + timeOffset < itemTime
-                  ? Text(
+              // currentTime< itemTime
+                   Text(
                       DataCustomFormat.getCustomDateFormat(itemTime),
                       style: CustomTypography.textStyleHour,
-                    )
-                  : Text(
-                      'now'.tr,
-                      style: CustomTypography.textStyleHour,
                     ),
+                  // : Text(
+                  //     'now'.tr,
+                  //     style: CustomTypography.textStyleHour,
+                  //   ),
               const SizedBox(
                 height: 5,
               ),

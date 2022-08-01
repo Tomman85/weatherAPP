@@ -54,4 +54,11 @@ class CustomTypography {
     color: Colors.white70,
     fontSize: 10,
   );
+  static TextStyle textStyleSettingsTitle = const TextStyle(
+    fontSize: 25,
+  );
+
+  static TextStyle textStyleSettingsSubtitle = const TextStyle(
+    color: Colors.black54,
+  );
 }

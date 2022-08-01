@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:weather/const/hive_box_names.dart';
 import 'package:weather/presentation/search_page/search_page.dart';
+import 'package:weather/presentation/settings_page/settings_page.dart';
 import 'components/main_page_weather_content.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,9 +20,18 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar:true,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context)
+                  .pushNamed(SettingsPage.settingsPageRouteName);
+            },
+            icon: const Icon(Icons.settings),
+          ),
+        ],
         title: ValueListenableBuilder(
           valueListenable: Hive.box(favCity).listenable(),
           builder: (BuildContext context, value, Widget? child) {

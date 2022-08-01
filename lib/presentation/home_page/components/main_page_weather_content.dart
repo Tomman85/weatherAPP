@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:lottie/lottie.dart';
 import 'package:weather/const/hive_box_names.dart';
 import 'package:weather/models/openweather_model/weather_data_response.dart';
 import 'package:weather/presentation/home_page/components/weather_background_builder.dart';
@@ -21,7 +24,6 @@ class MainPageWeatherContent extends StatefulWidget {
 
 class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
   ListWeatherDataModel? weatherDataResponse;
-
   bool isLoading = false;
 
   Future<ListWeatherDataModel?> _getWeatherData(lat, lon, lang) async {
@@ -30,6 +32,14 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
         await OpenweatherRepositoryService.getOpenweatherData(lat, lon, lang);
     isLoading = false;
     return weatherDataResponse;
+  }
+
+  void changeLanguage() {
+    if (Get.locale == const Locale('pl', 'PL')) {
+      Get.updateLocale(const Locale('en', 'US'));
+    } else {
+      Get.updateLocale(const Locale('pl', 'PL'));
+    }
   }
 
   @override
@@ -64,9 +74,7 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
                     double windConverter =
                         ((data.currentWeatherModel.windSpeed * 1 / 1000) /
                             (1 / 3600));
-
                     return Container(
-                      color: Colors.blue.shade200,
                       width: double.infinity,
                       child: Stack(
                         children: [
@@ -124,10 +132,8 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
                       ),
                     );
                   } else {
-                    return const Center(
-                      child: Text(
-                        "ładowanie todo SPLASH SCREEN MUST HAVE",
-                      ),
+                    return Center(
+                      child: Text('ładowanie'),
                     );
                   }
                 },

@@ -4,6 +4,7 @@ import 'package:hive/hive.dart';
 import 'package:weather/const/hive_box_names.dart';
 import 'package:weather/presentation/search_page/components/autocomplete.dart';
 import 'package:weather/presentation/search_page/components/favorites_cities.dart';
+import 'package:weather/utils/custom_typography.dart';
 
 class SearchPage extends StatelessWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -35,9 +36,7 @@ class SearchPage extends StatelessWidget {
             child: Text(
               'cityManagement'.tr,
               textAlign: TextAlign.end,
-              style: const TextStyle(
-                fontSize: 25,
-              ),
+              style: CustomTypography.textStyleSettingsTitle,
             ),
           ),
          const  SizedBox(

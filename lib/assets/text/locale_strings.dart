@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 class LocaleString extends Translations {
   @override
   Map<String, Map<String, String>> get keys => {
-        'en_US': {
+        'en_EN': {
           'sunrise': 'Sunrise',
           'sunset': 'Sunset',
           'feelTemperature': 'Wind chill',
@@ -23,8 +23,14 @@ class LocaleString extends Translations {
           'permanentlyDeniedContent':
               'Location permissions are permanently denied, we cannot request permissions.',
           'ok': 'OK',
-          'language': 'en',
+          'language': 'EN',
+          'sLanguage': 'en',
           'now': 'Now',
+          'settings':'Settings',
+          'changeLanguage':'Language',
+          'chooseLanguage':'Choose language',
+
+
         },
         'pl_PL': {
           'sunrise': 'Wschód słońca',
@@ -47,8 +53,12 @@ class LocaleString extends Translations {
           'permanentlyDeniedContent':
               'Uprawnienia dotyczące lokalizacji są trwale wyłączone, nie możemy prosić o uprawnienia.',
           'ok': 'OK',
-          'language': 'pl',
+          'language': 'PL',
+          'sLanguage': 'pl',
           'now': 'Teraz',
+          'settings':'Ustawienia',
+          'changeLanguage':'JĘZYK',
+          'chooseLanguage':'Wybór języka',
         }
       };
 }

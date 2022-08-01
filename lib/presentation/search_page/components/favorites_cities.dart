@@ -20,10 +20,7 @@ class _FavoritesCitiesState extends State<FavoritesCities> {
 
   bool isLoading = false;
 
-  @override
-  void initState() {
-    super.initState();
-  }
+
 
   Future _getCurrentWeatherData(lat, lon,lang) async {
     isLoading = true;

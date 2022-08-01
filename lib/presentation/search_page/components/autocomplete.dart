@@ -51,7 +51,7 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
               }
               _getAutocompletePredictions(
                 textEditingValue.text,
-                'language'.tr,
+                'sLanguage'.tr,
               );
               if (predictionModel == null) {
                 return const Iterable<PredictionModel>.empty();
