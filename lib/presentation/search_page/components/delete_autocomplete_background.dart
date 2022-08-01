@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:weather/utils/custom_typography.dart';
 
 class DeleteAutocompleteBackground extends StatelessWidget {
   const DeleteAutocompleteBackground({
@@ -11,15 +13,15 @@ class DeleteAutocompleteBackground extends StatelessWidget {
       padding: const EdgeInsets.all(15),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        children: const <Widget>[
-          Icon(
+        children: <Widget>[
+          const Icon(
             Icons.delete,
             color: Colors.red,
             size: 35,
           ),
           Text(
-            "Przesuń aby usunąć",
-            style: TextStyle(color: Colors.red, fontSize: 18,),
+            "moveToDelete".tr,
+            style: CustomTypography.textStyleRemove,
           )
         ],
       ),

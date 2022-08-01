@@ -1,11 +1,16 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
+
+import 'package:get/get.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:weather/const/hive_box_names.dart';
-import 'package:weather/credentials.dart';
-import 'package:weather/presentation/models/openweather_model/weather_data_response.dart';
-import 'package:weather/presentation/services/http_openweather_service.dart';
-import 'package:intl/intl.dart';
+import 'package:weather/models/openweather_model/weather_data_response.dart';
+import 'package:weather/presentation/home_page/components/weather_background_builder.dart';
+import 'package:weather/presentation/search_page/search_page.dart';
+import 'package:weather/services/repository_services/openweather_repository_service/openweather_repository_service.dart';
+import 'current_weather_box.dart';
+import 'daily_weather_list.dart';
+import 'horizontal_weather_list.dart';
+import 'main_current_weather.dart';
 
 class MainPageWeatherContent extends StatefulWidget {
   const MainPageWeatherContent({Key? key}) : super(key: key);
@@ -15,261 +20,118 @@ class MainPageWeatherContent extends StatefulWidget {
 }
 
 class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
-  HttpWeatherService? httpService;
-
   ListWeatherDataModel? weatherDataResponse;
 
   bool isLoading = false;
 
-  Future getWeatherData(lat, lon) async {
-    Response? response;
-    try {
-      isLoading = true;
-      response = await httpService
-          ?.getRequest("lat=$lat&lon=$lon&units=metric&appid=$openWeatherApi5");
-      isLoading = false;
-      if (response?.statusCode == 200) {
-        var elo = response?.data;
-        weatherDataResponse = ListWeatherDataModel.fromJson(response?.data);
-      } else {
-        print('not good');
-      }
-    } on Exception catch (e) {
-      isLoading = false;
-      print(e);
-    }
+  Future<ListWeatherDataModel?> _getWeatherData(lat, lon, lang) async {
+    isLoading = true;
+    weatherDataResponse =
+        await OpenweatherRepositoryService.getOpenweatherData(lat, lon, lang);
+    isLoading = false;
     return weatherDataResponse;
-  }
-
-  @override
-  void initState() {
-    httpService = HttpWeatherService();
-    // Hive.openBox(mainCity);
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    final DateFormat dateFormat = DateFormat.Hm();
-    var box = Hive.box(mainCity).getAt(0);
-    return FutureBuilder(
-      future: getWeatherData(
-        box.latitude,
-        box.longitude,
-      ),
-      builder: (
-        BuildContext context,
-        AsyncSnapshot snapshot,
-      ) {
-        print(snapshot.hasData.toString());
-        if (snapshot.hasData) {
-          var data = snapshot.data;
-          double windConverter =
-              ((data.currentWeatherModel.windSpeed * 1 / 1000) / (1 / 3600));
-          double windAngle = data.currentWeatherModel.windDegree * 3.14 / 135;
 
-          return Container(
-            padding: EdgeInsets.only(top: 50),
-            color: Colors.blue.shade200,
-            width: double.infinity,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              // mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "${data.currentWeatherModel.temperature.toStringAsFixed(0)} ",
-                      style: const TextStyle(
-                        fontSize: 120,
-                        color: Colors.white,
+    return ValueListenableBuilder(
+      valueListenable: Hive.box(favCity).listenable(),
+      builder: (BuildContext context, Box<dynamic> value, Widget? child) {
+        Box box = Hive.box(favCity);
+
+        return box.isEmpty
+            ? Center(
+                child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context)
+                          .pushNamed(SearchPage.searchPageRouteName);
+                    },
+                    child:
+                        const Text('empty TODO KLIKAJ W TO JAK JEST PUSTO ')))
+            : FutureBuilder(
+                future: _getWeatherData(
+                    box.getAt(Hive.box(favCity).length - 1).latitude,
+                    box.getAt(Hive.box(favCity).length - 1).longitude,
+                    'language'.tr),
+                builder: (
+                  BuildContext context,
+                  AsyncSnapshot snapshot,
+                ) {
+                  if (snapshot.hasData) {
+                    dynamic data = snapshot.data;
+                    double windConverter =
+                        ((data.currentWeatherModel.windSpeed * 1 / 1000) /
+                            (1 / 3600));
+
+                    return Container(
+                      color: Colors.blue.shade200,
+                      width: double.infinity,
+                      child: Stack(
+                        children: [
+                          WeatherBackgroundBuilder.buildChild(
+                            data.currentWeatherModel.weatherDescription[0].id,
+                            size.width,
+                            size.height,
+                            data.currentWeatherModel.currentTime,
+                            data.currentWeatherModel.sunrise,
+                            data.currentWeatherModel.sunset,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 130.0),
+                            child: SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  MainCurrentWeather(
+                                    data: data,
+                                  ),
+                                  Text(
+                                    "${data.currentWeatherModel.weatherDescription[0].description} ",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.white.withOpacity(0.6),
+                                    ),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                  SizedBox(
+                                    height: size.height * 0.2,
+                                    child: HorizontalWeatherList(
+                                      data: data,
+                                      windConverter: windConverter,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: size.height * 0.2,
+                                    child: DailyWeatherList(
+                                      data: data,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  CurrentWeatherBox(
+                                    size: size,
+                                    data: data,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      textAlign: TextAlign.end,
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(
-                        top: 15,
-                      ),
+                    );
+                  } else {
+                    return const Center(
                       child: Text(
-                        "\u2103",
-                        style: TextStyle(
-                          fontSize: 25,
-                          color: Colors.white,
-                        ),
+                        "ładowanie todo SPLASH SCREEN MUST HAVE",
                       ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Transform.rotate(
-                      angle: windAngle,
-                      child: const IconButton(
-                        icon: Icon(
-                          Icons.arrow_right_alt,
-                          color: Colors.white,
-                          size: 30,
-                        ),
-                        onPressed: null,
-                      ),
-                    ),
-                    // Text("${snapshot.data.currentWeatherModel.windSpeed}   "  ),
-                    Text(
-                      "${windConverter.toStringAsFixed(1)} km/h",
-                      style: const TextStyle(color: Colors.white, fontSize: 20),
-                    )
-                  ],
-                ),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(20),
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-                  decoration: BoxDecoration(
-                    color: Colors.blue.shade300,
-                    borderRadius: BorderRadius.circular(
-                      20,
-                    ),
-                  ),
-                  height: size.height * 0.4,
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: size.height * 0.1,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text(
-                            "Wschód ${dateFormat.format(
-                              DateTime.fromMillisecondsSinceEpoch(
-                                  data.currentWeatherModel.sunrise * 1000),
-                            )}",
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                          Text(
-                            "Zachód  ${dateFormat.format(
-                              DateTime.fromMillisecondsSinceEpoch(
-                                  data.currentWeatherModel.sunset * 1000),
-                            )}",
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 40,
-                      ),
-                      Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Odczuwalnie",
-                                style: TextStyle(color: Colors.white54),
-                              ),
-                              SizedBox(
-                                width: size.width * 0.3,
-                              ),
-                              const Text(
-                                "Wilgotność",
-                                style: TextStyle(color: Colors.white54),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                "${data.currentWeatherModel.feelTemperature.toStringAsFixed(0)} \u2103",
-                                style: const TextStyle(
-                                    fontSize: 18, color: Colors.white),
-                              ),
-                              SizedBox(
-                                width: size.width * 0.4,
-                              ),
-                              Text(
-                                "${data.currentWeatherModel.humidity.toStringAsFixed(0)} %",
-                                style: const TextStyle(
-                                    fontSize: 18, color: Colors.white),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Indeks UV",
-                                style: TextStyle(
-                                  color: Colors.white54,
-                                ),
-                              ),
-                              SizedBox(
-                                width: size.width * 0.35,
-                              ),
-                              const Text(
-                                "Ciśnienie",
-                                style: TextStyle(
-                                  color: Colors.white54,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                "${data.currentWeatherModel.uv.toStringAsFixed(0)}   ",
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              SizedBox(
-                                width: size.width * 0.45,
-                              ),
-                              Text(
-                                "${data.currentWeatherModel.pressure.toStringAsFixed(0)} hPa",
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          );
-        } else {
-          return const Center(
-            child: Text(
-              "ładowanie",
-            ),
-          );
-        }
+                    );
+                  }
+                },
+              );
       },
     );
   }

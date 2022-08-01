@@ -4,17 +4,11 @@ part 'prediction_model.g.dart';
 
 @JsonSerializable()
 class PredictionModel {
-  @JsonKey(name: "city")
   String? city;
-
-  @JsonKey(name: "formatted")
   String? formatted;
-  @JsonKey(name: "country")
   String? country;
-
   @JsonKey(name: "lon")
   double? longitude;
-
   @JsonKey(name: "lat")
   double? latitude;
 
