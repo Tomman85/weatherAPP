@@ -5,7 +5,7 @@ import 'package:weather/utils/custom_typography.dart';
 import 'package:weather/utils/data_custom_format.dart';
 
 class CurrentWeatherBox extends StatelessWidget {
-  const CurrentWeatherBox({
+   CurrentWeatherBox({
     Key? key,
     required this.size,
     required this.data,
@@ -13,10 +13,12 @@ class CurrentWeatherBox extends StatelessWidget {
 
   final Size size;
   final dynamic data;
+ DateTime dateTime = DateTime.now();
+ 
 
   //TODO Dodana tu jeszcze bedzie animacja słońca
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {print(dateTime.timeZoneOffset.inSeconds);
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
@@ -34,9 +36,9 @@ class CurrentWeatherBox extends StatelessWidget {
           BuildCurrentWeatherBoxRow(
             style: CustomTypography.textStyleDetailedRowTime,
             firstColumnData:
-                "${'sunrise'.tr} ${DataCustomFormat.getCustomDateFormat(data.currentWeatherModel.sunrise + data.timeOffset - 7200)}",
+                "${'sunrise'.tr} ${DataCustomFormat.getCustomDateFormat(data.currentWeatherModel.sunrise + data.timeOffset )}",
             secondColumnData:
-                "${'sunset'.tr} ${DataCustomFormat.getCustomDateFormat(data.currentWeatherModel.sunset + data.timeOffset - 7200)}",
+                "${'sunset'.tr} ${DataCustomFormat.getCustomDateFormat(data.currentWeatherModel.sunset + data.timeOffset)}",
           ),
           const Spacer(),
           BuildCurrentWeatherBoxRow(

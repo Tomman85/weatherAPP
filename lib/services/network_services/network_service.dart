@@ -4,7 +4,7 @@ class NetworkService {
   Dio? _api;
 
   NetworkService() {
-    _api = Dio(
+    _api ??= Dio(
       BaseOptions(
         connectTimeout: 20000,
         receiveTimeout: 20000,
