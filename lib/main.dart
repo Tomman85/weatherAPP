@@ -33,8 +33,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: HomePage.homePageRouteName,
       routes: {
-        // SplashScreen.splashPageRouteName: (
-        //     context) => const SplashScreen(),
+
         HomePage.homePageRouteName: (context) => const HomePage(),
         SearchPage.searchPageRouteName: (context) => const SearchPage(),
         SettingsPage.settingsPageRouteName: (context) => const SettingsPage(),

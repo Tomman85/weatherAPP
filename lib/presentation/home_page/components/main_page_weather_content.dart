@@ -69,12 +69,14 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
                   BuildContext context,
                   AsyncSnapshot snapshot,
                 ) {
+                  Widget child;
                   if (snapshot.hasData) {
                     dynamic data = snapshot.data;
                     double windConverter =
                         ((data.currentWeatherModel.windSpeed * 1 / 1000) /
                             (1 / 3600));
-                    return Container(
+                    child = Container(
+                      key: const ValueKey(1),
                       width: double.infinity,
                       child: Stack(
                         children: [
@@ -132,10 +134,30 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
                       ),
                     );
                   } else {
-                    return Center(
-                      child: Text('ładowanie'),
+                    child = Center(
+                      child: Lottie.asset(
+                        'lib/assets/lottie/61302-weather-icon.json',
+                        key: const ValueKey(0),
+                      ),
                     );
                   }
+                  return AnimatedSwitcher(
+                    // switchInCurve: Curves.fastOutSlowIn,
+                    // switchOutCurve: Curves.bounceIn,
+
+                    transitionBuilder: (child, animation) => FadeTransition(
+                      opacity: Tween<double>(begin: 0.0, end: 3.0).animate(
+                        CurvedAnimation(
+                          parent: animation,
+                          curve: Interval(0.7, 1.0),
+                        ),
+                      ),
+                      child: child,
+                    ),
+                    reverseDuration: const Duration(seconds: 18),
+                    duration: const Duration(seconds: 5),
+                    child: child,
+                  );
                 },
               );
       },
