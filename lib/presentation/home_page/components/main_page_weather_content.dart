@@ -1,15 +1,13 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:lottie/lottie.dart';
 import 'package:weather/const/hive_box_names.dart';
 import 'package:weather/models/openweather_model/weather_data_response.dart';
 import 'package:weather/presentation/home_page/components/weather_background_builder.dart';
 import 'package:weather/presentation/search_page/search_page.dart';
 import 'package:weather/services/repository_services/openweather_repository_service/openweather_repository_service.dart';
+import 'package:weather/utils/border_text_style.dart';
 import 'current_weather_box.dart';
 import 'daily_weather_list.dart';
 import 'horizontal_weather_list.dart';
@@ -71,10 +69,8 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
                 ) {
                   if (snapshot.hasData) {
                     dynamic data = snapshot.data;
-                    double windConverter =
-                        ((data.currentWeatherModel.windSpeed * 1 / 1000) /
-                            (1 / 3600));
-                    return Container(
+
+                    return SizedBox(
                       width: double.infinity,
                       child: Stack(
                         children: [
@@ -96,19 +92,20 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
                                   MainCurrentWeather(
                                     data: data,
                                   ),
-                                  Text(
-                                    "${data.currentWeatherModel.weatherDescription[0].description} ",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.white.withOpacity(0.6),
+                                  BorderTextStyle(
+                                    child: Text(
+                                      "${data.currentWeatherModel.weatherDescription[0].description} ",
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                      ),
+                                      textAlign: TextAlign.start,
                                     ),
-                                    textAlign: TextAlign.start,
                                   ),
                                   SizedBox(
                                     height: size.height * 0.2,
                                     child: HorizontalWeatherList(
                                       data: data,
-                                      windConverter: windConverter,
                                     ),
                                   ),
                                   SizedBox(

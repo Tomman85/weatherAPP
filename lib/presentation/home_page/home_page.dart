@@ -1,8 +1,11 @@
+import 'package:bordered_text/bordered_text.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:icon_decoration/icon_decoration.dart';
 import 'package:weather/const/hive_box_names.dart';
 import 'package:weather/presentation/search_page/search_page.dart';
 import 'package:weather/presentation/settings_page/settings_page.dart';
+import 'package:weather/utils/border_text_style.dart';
 import 'components/main_page_weather_content.dart';
 
 class HomePage extends StatefulWidget {
@@ -29,7 +32,17 @@ class _HomePageState extends State<HomePage> {
               Navigator.of(context)
                   .pushNamed(SettingsPage.settingsPageRouteName);
             },
-            icon: const Icon(Icons.settings),
+            icon: const DecoratedIcon(
+              decoration: IconDecoration(
+                border: IconBorder(
+                  color: Colors.black26,
+                  width: 5,
+                ),
+              ),
+              icon: Icon(
+                Icons.settings,
+              ),
+            ),
           ),
         ],
         title: ValueListenableBuilder(
@@ -41,11 +54,17 @@ class _HomePageState extends State<HomePage> {
                 ? Text(
                     'brak',
                   )
-                : Text(
-                    box.getAt(box.length - 1).cityName.toString().split(',')[0],
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 30,
+                : BorderTextStyle(
+                    child: Text(
+                      box
+                          .getAt(box.length - 1)
+                          .cityName
+                          .toString()
+                          .split(',')[0],
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                      ),
                     ),
                   );
           },
@@ -58,7 +77,15 @@ class _HomePageState extends State<HomePage> {
               SearchPage.searchPageRouteName,
             );
           },
-          child: const Icon(Icons.add),
+          child: const DecoratedIcon(
+            icon: Icon(Icons.add_circle_outlined),
+            decoration: IconDecoration(
+              border: IconBorder(
+                color: Colors.black26,
+                width: 6,
+              ),
+            ),
+          ),
         ),
       ),
       body: const MainPageWeatherContent(),
