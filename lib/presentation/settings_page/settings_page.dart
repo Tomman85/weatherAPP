@@ -6,7 +6,6 @@ import 'package:weather/utils/custom_typography.dart';
 import 'package:weather/utils/data_custom_format.dart';
 
 class SettingsPage extends StatefulWidget {
-  static const settingsPageRouteName = '/settings';
 
   const SettingsPage({Key? key}) : super(key: key);
 

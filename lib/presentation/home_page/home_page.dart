@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:weather/const/hive_box_names.dart';
-import 'package:weather/presentation/search_page/search_page.dart';
-import 'package:weather/presentation/settings_page/settings_page.dart';
+import 'package:weather/const/page_name_routes.dart';
+
 import 'components/main_page_weather_content.dart';
 
 class HomePage extends StatefulWidget {
-  static const homePageRouteName = '/homepage';
-
   const HomePage({
     Key? key,
   }) : super(key: key);
@@ -26,8 +24,7 @@ class _HomePageState extends State<HomePage> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.of(context)
-                  .pushNamed(SettingsPage.settingsPageRouteName);
+              Navigator.of(context).pushNamed(settingsPageRouteName);
             },
             icon: const Icon(Icons.settings),
           ),
@@ -55,7 +52,7 @@ class _HomePageState extends State<HomePage> {
         leading: GestureDetector(
           onTap: () {
             Navigator.of(context).pushNamed(
-              SearchPage.searchPageRouteName,
+              searchPageRouteName,
             );
           },
           child: const Icon(Icons.add),

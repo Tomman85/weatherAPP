@@ -1,14 +1,11 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:lottie/lottie.dart';
 import 'package:weather/const/hive_box_names.dart';
+import 'package:weather/const/page_name_routes.dart';
 import 'package:weather/models/openweather_model/weather_data_response.dart';
 import 'package:weather/presentation/home_page/components/weather_background_builder.dart';
-import 'package:weather/presentation/search_page/search_page.dart';
 import 'package:weather/services/repository_services/openweather_repository_service/openweather_repository_service.dart';
 import 'current_weather_box.dart';
 import 'daily_weather_list.dart';
@@ -55,8 +52,7 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
             ? Center(
                 child: GestureDetector(
                     onTap: () {
-                      Navigator.of(context)
-                          .pushNamed(SearchPage.searchPageRouteName);
+                      Navigator.of(context).pushNamed(searchPageRouteName);
                     },
                     child:
                         const Text('empty TODO KLIKAJ W TO JAK JEST PUSTO ')))

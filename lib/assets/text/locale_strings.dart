@@ -26,10 +26,17 @@ class LocaleString extends Translations {
           'language': 'EN',
           'sLanguage': 'en',
           'now': 'Now',
-          'settings':'Settings',
-          'changeLanguage':'Language',
-          'chooseLanguage':'Choose language',
-
+          'settings': 'Settings',
+          'changeLanguage': 'Language',
+          'chooseLanguage': 'Choose language',
+          'login': 'Login',
+          'email': 'Enter email',
+          'password': 'Enter password',
+          'passwordRepeat': 'Repeat the password',
+          'forgotPassword': 'Forgot the password?',
+          'account': 'Don\'t have an account yet?',
+          'register': 'Register',
+          'wannaLogin': 'Login',
 
         },
         'pl_PL': {
@@ -56,9 +63,17 @@ class LocaleString extends Translations {
           'language': 'PL',
           'sLanguage': 'pl',
           'now': 'Teraz',
-          'settings':'Ustawienia',
-          'changeLanguage':'JĘZYK',
-          'chooseLanguage':'Wybór języka',
+          'settings': 'Ustawienia',
+          'changeLanguage': 'JĘZYK',
+          'chooseLanguage': 'Wybór języka',
+          'login': 'Zaloguj się',
+          'email': 'Wprowadź email',
+          'password': 'Wprowadź hasło',
+          'passwordRepeat': 'Powtórz hasło',
+          'forgotPassword': 'Zapomniałeś hasła?',
+          'account': 'Nie posiadasz jeszcze konta?',
+          'register': 'Zarejestruj się',
+          'wannaLogin': 'Zaloguj się',
         }
       };
 }
