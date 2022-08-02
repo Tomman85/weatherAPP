@@ -13,8 +13,15 @@ class EmailFormField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 20),
       child: TextFormField(
-        validator:
-           EmailValidator(errorText: 'Enter valid pass'),
+        validator: (val) {
+          if (val!.isEmpty) {
+            return 'emptyEmail'.tr;
+          }
+          if (EmailValidator(errorText: 'validEmail'.tr).isValid(val)) {
+            return null;
+          }
+          return EmailValidator(errorText: 'validEmail'.tr).errorText;
+        },
         decoration: InputDecoration(
           prefixIcon: const Icon(Icons.person),
           labelText: 'email'.tr,

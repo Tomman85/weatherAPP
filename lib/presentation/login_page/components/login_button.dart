@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LoginButton extends StatelessWidget {
+  final VoidCallback pointToOnPress;
+
   const LoginButton({
     Key? key,
+    required this.pointToOnPress,
   }) : super(key: key);
 
   @override
@@ -14,7 +17,7 @@ class LoginButton extends StatelessWidget {
         top: 30,
       ),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: pointToOnPress,
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),

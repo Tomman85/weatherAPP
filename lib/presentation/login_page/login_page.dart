@@ -15,38 +15,40 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  bool isVisibility = false;
+  bool isVisibility = true;
   bool wantRegister = false;
   Widget? child;
   String? password;
 
   final formKey = GlobalKey<FormState>();
+  final TextEditingController _pass = TextEditingController();
+  final TextEditingController _confirmPass = TextEditingController();
+
   final passwordValidator = MultiValidator([
-    RequiredValidator(errorText: 'password is required'),
-    MinLengthValidator(8, errorText: 'password must be at least 8 digits long'),
-    PatternValidator(r'(?=.*?[#?!@$%^&*-])',
-        errorText: 'passwords must have at least one special character')
+    RequiredValidator(errorText: 'emptyPassword'.tr),
+    MinLengthValidator(8, errorText: 'shortPassword'.tr),
+    PatternValidator(r'(?=.*?[#?!@$%^&*-])', errorText: 'specialPassword'.tr)
   ]);
 
   @override
   Widget build(BuildContext context) {
-    Widget firstChild = const LoginButton();
-    Widget? secondChild = PasswordFormField(
-      onChanged: (val) {
-        password = val;
-      },
-      validator: (val) {
-        if (password == null) {
-          return;
+    Widget firstChild = LoginButton(
+      pointToOnPress: () {
+        if (formKey.currentState!.validate()) {
+          print('valid');
         }
-        MatchValidator(errorText: '').validateMatch(val, password!);
       },
+    );
+    Widget? secondChild = PasswordFormField(
+      validator: (val) => MatchValidator(errorText: 'matchPassword'.tr)
+          .validateMatch(val, _pass.text),
       isVisibility: isVisibility,
       labelText: 'passwordRepeat'.tr,
       pointToOnPress: () {
         isVisibility = !isVisibility;
         setState(() {});
       },
+      textEditingController: _confirmPass,
     );
 
     if (!wantRegister) {
@@ -71,20 +73,16 @@ class _LoginPageState extends State<LoginPage> {
                 child: Lottie.asset('lib/assets/lottie/32532-day-night.json',
                     width: 200),
               ),
-              EmailFormField(),
+              const EmailFormField(),
               PasswordFormField(
-                validator: (val) {
-                  if (password == null) {
-                    return;
-                  }
-                  MatchValidator(errorText: '').validateMatch(val, password!);
-                },
+                validator: passwordValidator,
                 isVisibility: isVisibility,
                 labelText: 'password'.tr,
                 pointToOnPress: () {
                   isVisibility = !isVisibility;
                   setState(() {});
                 },
+                textEditingController: _pass,
               ),
               AnimatedSwitcher(
                 duration: const Duration(seconds: 1),

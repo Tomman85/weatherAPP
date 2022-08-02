@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Colors.white,
       ),
-      initialRoute: loginPageRouteName,
+      initialRoute: homePageRouteName,
       routes: {
         loginPageRouteName: (context) => const LoginPage(),
         homePageRouteName: (context) => const HomePage(),

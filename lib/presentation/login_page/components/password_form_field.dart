@@ -9,7 +9,8 @@ class PasswordFormField extends StatelessWidget {
   final String? labelText;
   final VoidCallback pointToOnPress;
   final FormFieldValidator validator;
-  final ValueChanged<String>? onChanged;
+
+  final TextEditingController textEditingController;
 
   const PasswordFormField({
     Key? key,
@@ -17,7 +18,8 @@ class PasswordFormField extends StatelessWidget {
     this.labelText,
     required this.pointToOnPress,
     required this.validator,
-    this.onChanged,
+
+    required this.textEditingController,
   }) : super(key: key);
 
   @override
@@ -25,7 +27,7 @@ class PasswordFormField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 30),
       child: TextFormField(
-        onChanged: onChanged,
+        controller: textEditingController,
         validator: validator,
         obscureText: isVisibility,
         decoration: InputDecoration(
@@ -33,8 +35,8 @@ class PasswordFormField extends StatelessWidget {
           labelText: labelText,
           suffixIcon: IconButton(
             icon: isVisibility
-                ? const Icon(Icons.visibility)
-                : const Icon(Icons.visibility_off),
+                ? const Icon(Icons.visibility_off)
+                : const Icon(Icons.visibility),
             onPressed: pointToOnPress,
           ),
           fillColor: Colors.white,
