@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import 'package:weather/cubit/sign_in/sign_in_cubit.dart';
 import 'package:weather/presentation/login_page/components/email_form_field.dart';
 import 'package:weather/presentation/login_page/components/login_button.dart';
 import 'package:weather/presentation/login_page/components/password_form_field.dart';
 import 'package:weather/presentation/login_page/components/register_button.dart';
+import 'package:weather/utils/error_dialog.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -23,6 +26,7 @@ class _LoginPageState extends State<LoginPage> {
   final formKey = GlobalKey<FormState>();
   final TextEditingController _pass = TextEditingController();
   final TextEditingController _confirmPass = TextEditingController();
+  final TextEditingController _email = TextEditingController();
 
   final passwordValidator = MultiValidator([
     RequiredValidator(errorText: 'emptyPassword'.tr),
@@ -32,13 +36,25 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget firstChild = LoginButton(
-      pointToOnPress: () {
-        if (formKey.currentState!.validate()) {
-          print('valid');
-        }
-      },
-    );
+    Widget firstChild =
+        BlocConsumer<SignInCubit, SignInState>(listener: (context, state) {
+      if (state.signInStatus == SignInStatus.error) {
+        errorDialog(context, state.error);
+      }
+    }, builder: (context, state) {
+      return LoginButton(
+        pointToOnPress: () {
+          if (formKey.currentState!.validate()) {
+            print('valid');
+            state.signInStatus == SignInStatus.submitting
+                ? null
+                : context
+                    .read<SignInCubit>()
+                    .SignIn(email: _email.text, password: _pass.text);
+          }
+        },
+      );
+    });
     Widget? secondChild = PasswordFormField(
       validator: (val) => MatchValidator(errorText: 'matchPassword'.tr)
           .validateMatch(val, _pass.text),
@@ -57,89 +73,107 @@ class _LoginPageState extends State<LoginPage> {
       child = secondChild;
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0.0,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Form(
-          key: formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Center(
-                child: Lottie.asset('lib/assets/lottie/32532-day-night.json',
-                    width: 200),
-              ),
-              const EmailFormField(),
-              PasswordFormField(
-                validator: passwordValidator,
-                isVisibility: isVisibility,
-                labelText: 'password'.tr,
-                pointToOnPress: () {
-                  isVisibility = !isVisibility;
-                  setState(() {});
-                },
-                textEditingController: _pass,
-              ),
-              AnimatedSwitcher(
-                duration: const Duration(seconds: 1),
-                child: child,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: TextButton(
-                  onPressed: () {},
-                  child: Text('forgotPassword'.tr),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 25),
-                child: Center(
-                  child: Text(
-                    'account'.tr,
-                    style: const TextStyle(
-                      color: Colors.grey,
+    return BlocConsumer<SignInCubit, SignInState>(
+      listener: (context, state) {
+        if (state.signInStatus == SignInStatus.error) {
+          errorDialog(context, state.error);
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            elevation: 0.0,
+          ),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Form(
+              key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Center(
+                    child: Lottie.asset(
+                        'lib/assets/lottie/32532-day-night.json',
+                        width: 200),
+                  ),
+                  EmailFormField(
+                    editingController: _email,
+                  ),
+                  PasswordFormField(
+                    validator: passwordValidator,
+                    isVisibility: isVisibility,
+                    labelText: 'password'.tr,
+                    pointToOnPress: () {
+                      isVisibility = !isVisibility;
+                      setState(() {});
+                    },
+                    textEditingController: _pass,
+                  ),
+                  AnimatedSwitcher(
+                    duration: const Duration(seconds: 1),
+                    child: child,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: TextButton(
+                      onPressed: () {},
+                      child: Text('forgotPassword'.tr),
                     ),
                   ),
-                ),
-              ),
-              RegisterButton(
-                onPressed: () {
-                  if (wantRegister == true) {
-                    if (formKey.currentState!.validate()) {
-                      print('valid');
-                    }
-                  }
-                  wantRegister = true;
-                  setState(() {});
-                },
-              ),
-              wantRegister
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: GestureDetector(
-                        onTap: () {
-                          wantRegister = false;
-                          setState(() {});
-                        },
-                        child: Center(
-                          child: Text(
-                            'wannaLogin'.tr,
-                            style: const TextStyle(
-                              color: Colors.grey,
-                            ),
-                          ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 25),
+                    child: Center(
+                      child: Text(
+                        'account'.tr,
+                        style: const TextStyle(
+                          color: Colors.grey,
                         ),
                       ),
-                    )
-                  : Container(),
-            ],
+                    ),
+                  ),
+                  RegisterButton(
+                    onPressed: () {
+                      if (wantRegister == true) {
+                        if (formKey.currentState!.validate()) {
+                          print('valid');
+                          state.signInStatus == SignInStatus.submitting
+                              ? null
+                              : context.read<SignInCubit>().SignIn(
+                                  email: _email.text, password: _pass.text);
+                        }
+                      }
+                      wantRegister = true;
+                      setState(() {});
+                    },
+                  ),
+                  wantRegister
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: GestureDetector(
+                            onTap: () {
+                              wantRegister = false;
+                              setState(() {});
+                            },
+                            child: state.signInStatus == SignInStatus.submitting
+                                ? Container()
+                                : Center(
+                                    child: Text(
+                                      'wannaLogin'.tr,
+                                      style: const TextStyle(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                          ),
+                        )
+                      : Container(),
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
