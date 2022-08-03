@@ -39,6 +39,8 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
 
   @override
   Widget build(BuildContext context) {
+    bool checkAddress = false;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(
@@ -89,7 +91,12 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
                       onPressed: () async {
                         _getCurrentLocation();
 
-                        if (_currentAddress != null) {
+                        Hive.box(favCity).values.toList().forEach((element) {
+                          if (_currentAddress == element.cityName) {
+                            checkAddress = true;
+                          }
+                        });
+                        if (_currentAddress != null && !checkAddress) {
                           Hive.box(favCity).add(
                             DataModel(
                               latitude: _position!.latitude.toString(),
@@ -142,15 +149,26 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
                         return GestureDetector(
                           onTap: () {
                             onSelected(option);
-                            var box = Hive.box(favCity);
-                            //TODO Dodac funkcjonalosc aby nie powielac miast
-                            box.add(
-                              DataModel(
-                                longitude: option.longitude.toString(),
-                                latitude: option.latitude.toString(),
-                                cityName: option.formatted.toString(),
-                              ),
-                            );
+                            Hive.box(favCity)
+                                .values
+                                .toList()
+                                .forEach((element) {
+                              if (option.formatted.toString() ==
+                                  element.cityName) {
+                                checkAddress = true;
+                              }
+                            });
+                            if (option.formatted != null && !checkAddress) {
+                              Hive.box(favCity).add(
+                                DataModel(
+                                  longitude: option.longitude.toString(),
+                                  latitude: option.latitude.toString(),
+                                  cityName: option.formatted.toString(),
+                                ),
+                              );
+                              checkAddress = false;
+                            }
+
                             setState(() {});
                           },
                           child: isLoading
@@ -205,8 +223,8 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
     if (permission == LocationPermission.denied) {
       AutocompleteShowDialog.showCustomDialog(
         context: context,
-        titleText:'Caution'.tr,
-        contentText:'deniedContent'.tr,
+        titleText: 'Caution'.tr,
+        contentText: 'deniedContent'.tr,
         childText: 'ok'.tr,
       );
       return Future.error('Location permissions are denied');

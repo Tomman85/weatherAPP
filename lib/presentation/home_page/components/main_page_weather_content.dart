@@ -51,11 +51,12 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
         return box.isEmpty
             ? Center(
                 child: GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pushNamed(searchPageRouteName);
-                    },
-                    child:
-                        const Text('empty TODO KLIKAJ W TO JAK JEST PUSTO ')))
+                  onTap: () {
+                    Navigator.of(context).pushNamed(searchPageRouteName);
+                  },
+                  child: const Text('empty TODO KLIKAJ W TO JAK JEST PUSTO '),
+                ),
+              )
             : FutureBuilder(
                 future: _getWeatherData(
                     box.getAt(Hive.box(favCity).length - 1).latitude,
