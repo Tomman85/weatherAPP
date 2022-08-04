@@ -69,12 +69,13 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
                   BuildContext context,
                   AsyncSnapshot snapshot,
                 ) {
+                  Widget child;
                   if (snapshot.hasData) {
                     dynamic data = snapshot.data;
                     double windConverter =
                         ((data.currentWeatherModel.windSpeed * 1 / 1000) /
                             (1 / 3600));
-                    return Container(
+                    child = SizedBox(
                       width: double.infinity,
                       child: Stack(
                         children: [
@@ -132,10 +133,25 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
                       ),
                     );
                   } else {
-                    return Center(
-                      child: Text('ładowanie'),
+                    child = Center(
+                      child: Lottie.asset(
+                        'lib/assets/lottie/61302-weather-icon.json',
+                      ),
                     );
                   }
+                  return AnimatedSwitcher(
+                    transitionBuilder: (child, animation) => FadeTransition(
+                      opacity: Tween<double>(begin: 0.0, end: 1.0).animate(
+                        CurvedAnimation(
+                          parent: animation,
+                          curve: const Interval(0.4, 0.5),
+                        ),
+                      ),
+                      child: child,
+                    ),
+                    duration: const Duration(seconds: 8),
+                    child: child,
+                  );
                 },
               );
       },
