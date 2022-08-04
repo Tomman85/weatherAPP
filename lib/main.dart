@@ -5,7 +5,6 @@ import 'package:weather/config/hive_setup.dart';
 import 'package:weather/presentation/home_page/home_page.dart';
 import 'package:weather/presentation/search_page/search_page.dart';
 import 'package:weather/presentation/settings_page/settings_page.dart';
-import 'package:weather/presentation/splash_screen/splash_screen.dart';
 import 'package:weather/services/network_services/network_service.dart';
 
 void main() async {

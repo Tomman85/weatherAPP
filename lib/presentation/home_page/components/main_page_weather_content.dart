@@ -75,8 +75,7 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
                     double windConverter =
                         ((data.currentWeatherModel.windSpeed * 1 / 1000) /
                             (1 / 3600));
-                    child = Container(
-                      key: const ValueKey(1),
+                    child = SizedBox(
                       width: double.infinity,
                       child: Stack(
                         children: [
@@ -137,25 +136,20 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
                     child = Center(
                       child: Lottie.asset(
                         'lib/assets/lottie/61302-weather-icon.json',
-                        key: const ValueKey(0),
                       ),
                     );
                   }
                   return AnimatedSwitcher(
-                    // switchInCurve: Curves.fastOutSlowIn,
-                    // switchOutCurve: Curves.bounceIn,
-
                     transitionBuilder: (child, animation) => FadeTransition(
-                      opacity: Tween<double>(begin: 0.0, end: 3.0).animate(
+                      opacity: Tween<double>(begin: 0.0, end: 1.0).animate(
                         CurvedAnimation(
                           parent: animation,
-                          curve: Interval(0.7, 1.0),
+                          curve: const Interval(0.4, 0.5),
                         ),
                       ),
                       child: child,
                     ),
-                    reverseDuration: const Duration(seconds: 18),
-                    duration: const Duration(seconds: 5),
+                    duration: const Duration(seconds: 8),
                     child: child,
                   );
                 },
