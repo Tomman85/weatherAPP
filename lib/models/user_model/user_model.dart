@@ -11,6 +11,14 @@ class User {
     required this.name,
   });
 
+  Map<String, dynamic> toMap() {
+    return {
+      'email': email,
+      'displayName': name,
+      'age': id,
+    };
+  }
+
   factory User.fromDoc(DocumentSnapshot userDoc) {
     final userData = userDoc.data() as Map<String, dynamic>;
     return User(
@@ -27,4 +35,7 @@ class User {
       name: '',
     );
   }
+
+
+
 }

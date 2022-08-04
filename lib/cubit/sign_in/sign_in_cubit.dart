@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:weather/models/custom_error_model/custom_error_model.dart';
 import 'package:weather/services/repository_services/firebase_repository/auth_repository.dart';
+import 'package:weather/models/custom_error_model/custom_error_model.dart';
 
 part 'sign_in_state.dart';
 

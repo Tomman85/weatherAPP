@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hive/hive.dart';
 import 'package:get/get.dart';
+import 'package:weather/bloc/auth/auth_bloc.dart';
 import 'package:weather/const/hive_box_names.dart';
 import 'package:weather/models/autocomplete_model/list_response.dart';
 import 'package:weather/models/autocomplete_model/prediction_model.dart';
 import 'package:weather/models/hive_box_models/model_list_of_cities.dart';
 import 'package:weather/services/repository_services/autocomplete_repository_service/autocomplete_repository_service.dart';
+import 'package:weather/services/repository_services/firebase_repository/profile_repository.dart';
 import 'package:weather/utils/autocomplete_show_dialog.dart';
 import 'package:weather/utils/custom_typography.dart';
 
@@ -105,6 +108,10 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
                             ),
                           );
                         }
+                        if (context.read<AuthBloc>().state.authStatus ==
+                            AuthStatus.authenticated) {
+                          ProfileRepository.updateData("mojeid");
+                        }
                       },
                     ),
                     enabledBorder: const OutlineInputBorder(
@@ -168,7 +175,10 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
                               );
                               checkAddress = false;
                             }
-
+                            if (context.read<AuthBloc>().state.authStatus ==
+                                AuthStatus.authenticated) {
+                              ProfileRepository.updateData("mojeid");
+                            }
                             setState(() {});
                           },
                           child: isLoading

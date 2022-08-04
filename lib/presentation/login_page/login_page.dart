@@ -1,14 +1,21 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
 import 'package:weather/cubit/sign_in/sign_in_cubit.dart';
+import 'package:weather/cubit/sign_up/sign_up_cubit.dart';
+import 'package:weather/cubit/user/user_cubit.dart';
 import 'package:weather/presentation/login_page/components/email_form_field.dart';
 import 'package:weather/presentation/login_page/components/login_button.dart';
 import 'package:weather/presentation/login_page/components/password_form_field.dart';
 import 'package:weather/presentation/login_page/components/register_button.dart';
 import 'package:weather/utils/error_dialog.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fbAuth;
+
+import '../../const/hive_box_names.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -36,25 +43,32 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget firstChild =
-        BlocConsumer<SignInCubit, SignInState>(listener: (context, state) {
-      if (state.signInStatus == SignInStatus.error) {
-        errorDialog(context, state.error);
-      }
-    }, builder: (context, state) {
-      return LoginButton(
+    final db = FirebaseFirestore.instance;
+    Widget firstChild = BlocListener<SignInCubit, SignInState>(
+      listener: (context, state) {
+        if (state.signInStatus == SignInStatus.error) {
+          errorDialog(context, state.error);
+        } else if (state.signInStatus == SignInStatus.success) {
+          Navigator.of(context).pop();
+        }
+      },
+      child: LoginButton(
         pointToOnPress: () {
           if (formKey.currentState!.validate()) {
-            print('valid');
-            state.signInStatus == SignInStatus.submitting
+            context.read<SignInCubit>().state.signInStatus ==
+                    SignInStatus.submitting
                 ? null
                 : context
                     .read<SignInCubit>()
-                    .SignIn(email: _email.text, password: _pass.text);
+                    .SignIn(email: _email.text, password: _pass.text)
+                    .then((_) => context.read<UserCubit>().getProfile(
+                        uid: fbAuth.FirebaseAuth.instance.currentUser?.uid));
+            print('valid');
           }
         },
-      );
-    });
+      ),
+    );
+
     Widget? secondChild = PasswordFormField(
       validator: (val) => MatchValidator(errorText: 'matchPassword'.tr)
           .validateMatch(val, _pass.text),
@@ -73,107 +87,117 @@ class _LoginPageState extends State<LoginPage> {
       child = secondChild;
     }
 
-    return BlocConsumer<SignInCubit, SignInState>(
+    return BlocListener<SignUpCubit, SignUpState>(
       listener: (context, state) {
-        if (state.signInStatus == SignInStatus.error) {
+        if (state.signUpStatus == SignUpStatus.error) {
           errorDialog(context, state.error);
+        } else if (state.signUpStatus == SignUpStatus.success) {
+          Navigator.of(context).pop();
         }
       },
-      builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            elevation: 0.0,
-          ),
-          body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Form(
-              key: formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Center(
-                    child: Lottie.asset(
-                        'lib/assets/lottie/32532-day-night.json',
-                        width: 200),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          iconTheme: IconThemeData(color: Colors.blue),
+          backgroundColor: Colors.white,
+          elevation: 0.0,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Form(
+            key: formKey,
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                Center(
+                  child: Lottie.asset('lib/assets/lottie/32532-day-night.json',
+                      width: 200),
+                ),
+                EmailFormField(
+                  editingController: _email,
+                ),
+                PasswordFormField(
+                  validator: passwordValidator,
+                  isVisibility: isVisibility,
+                  labelText: 'password'.tr,
+                  pointToOnPress: () {
+                    isVisibility = !isVisibility;
+                    setState(() {});
+                  },
+                  textEditingController: _pass,
+                ),
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  child: child,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: TextButton(
+                    onPressed: () {},
+                    child: Text('forgotPassword'.tr),
                   ),
-                  EmailFormField(
-                    editingController: _email,
-                  ),
-                  PasswordFormField(
-                    validator: passwordValidator,
-                    isVisibility: isVisibility,
-                    labelText: 'password'.tr,
-                    pointToOnPress: () {
-                      isVisibility = !isVisibility;
-                      setState(() {});
-                    },
-                    textEditingController: _pass,
-                  ),
-                  AnimatedSwitcher(
-                    duration: const Duration(seconds: 1),
-                    child: child,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: TextButton(
-                      onPressed: () {},
-                      child: Text('forgotPassword'.tr),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 25),
-                    child: Center(
-                      child: Text(
-                        'account'.tr,
-                        style: const TextStyle(
-                          color: Colors.grey,
-                        ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 25),
+                  child: Center(
+                    child: Text(
+                      'account'.tr,
+                      style: const TextStyle(
+                        color: Colors.grey,
                       ),
                     ),
                   ),
-                  RegisterButton(
-                    onPressed: () {
-                      if (wantRegister == true) {
-                        if (formKey.currentState!.validate()) {
-                          print('valid');
-                          state.signInStatus == SignInStatus.submitting
-                              ? null
-                              : context.read<SignInCubit>().SignIn(
-                                  email: _email.text, password: _pass.text);
+                ),
+                RegisterButton(
+                  onPressed: () {
+                    if (wantRegister == true) {
+                      if (formKey.currentState!.validate()) {
+                        print('valid');
+                        if (context.read<SignUpCubit>().state.signUpStatus ==
+                            SignUpStatus.submitting) {
+                          null;
+                        } else {
+                          context
+                              .read<SignUpCubit>()
+                              .SignUp(email: _email.text, password: _pass.text)
+                              .then((_) => context.read<UserCubit>().getProfile(
+                                  uid: fbAuth
+                                      .FirebaseAuth.instance.currentUser?.uid));
                         }
                       }
-                      wantRegister = true;
-                      setState(() {});
-                    },
-                  ),
-                  wantRegister
-                      ? Padding(
-                          padding: const EdgeInsets.only(top: 20),
-                          child: GestureDetector(
-                            onTap: () {
-                              wantRegister = false;
-                              setState(() {});
-                            },
-                            child: state.signInStatus == SignInStatus.submitting
-                                ? Container()
-                                : Center(
-                                    child: Text(
-                                      'wannaLogin'.tr,
-                                      style: const TextStyle(
-                                        color: Colors.grey,
+                    }
+                    wantRegister = true;
+                    setState(() {});
+                  },
+                ),
+                wantRegister
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: GestureDetector(
+                          onTap: () {
+                            wantRegister = false;
+                            setState(() {});
+                          },
+                          child:
+                              context.read<SignUpCubit>().state.signUpStatus ==
+                                      SignUpStatus.submitting
+                                  ? Container()
+                                  : Center(
+                                      child: Text(
+                                        'wannaLogin'.tr,
+                                        style: const TextStyle(
+                                          color: Colors.grey,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                          ),
-                        )
-                      : Container(),
-                ],
-              ),
+                        ),
+                      )
+                    : Container(),
+              ],
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }
