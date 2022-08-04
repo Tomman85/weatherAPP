@@ -1,6 +1,6 @@
 import 'package:bordered_text/bordered_text.dart';
 import 'package:flutter/material.dart';
-import 'package:weather/utils/border_text_style.dart';
+import 'package:weather/reusable_widgets/border_text_style.dart';
 import 'package:weather/utils/custom_typography.dart';
 
 class MainCurrentWeather extends StatelessWidget {
@@ -13,7 +13,6 @@ class MainCurrentWeather extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //TODO Dodac jakiś background, nie widać napisu na białym tle
     return RichText(
       text: TextSpan(children: [
         WidgetSpan(

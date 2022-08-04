@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:icon_decoration/icon_decoration.dart';
 import 'package:intl/intl.dart';
-import 'package:weather/utils/border_text_style.dart';
+import 'package:weather/reusable_widgets/border_text_style.dart';
 import 'package:weather/utils/custom_typography.dart';
 import 'package:weather/utils/data_custom_format.dart';
 
@@ -37,15 +37,13 @@ class HorizontalWeatherList extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              //TODO zmienic 7200 na czas lokalny/offset lokalny
-              // currentTime< itemTime
+              //TODO zmienic 7200 na czas lokalny/offset lokalnycurrentTime< itemTime2
               BorderTextStyle(
                 child: Text(
                   DataCustomFormat.getCustomDateFormat(itemTime),
                   style: CustomTypography.textStyleBasic,
                 ),
               ),
-
               const SizedBox(
                 height: 5,
               ),
@@ -72,6 +70,7 @@ class HorizontalWeatherList extends StatelessWidget {
                       decoration: IconDecoration(
                         border: IconBorder(
                           color: Colors.black,
+                          
                         ),
                       ),
                     ),

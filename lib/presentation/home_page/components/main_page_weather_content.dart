@@ -7,7 +7,7 @@ import 'package:weather/models/openweather_model/weather_data_response.dart';
 import 'package:weather/presentation/home_page/components/weather_background_builder.dart';
 import 'package:weather/presentation/search_page/search_page.dart';
 import 'package:weather/services/repository_services/openweather_repository_service/openweather_repository_service.dart';
-import 'package:weather/utils/border_text_style.dart';
+import 'package:weather/reusable_widgets/border_text_style.dart';
 import 'current_weather_box.dart';
 import 'daily_weather_list.dart';
 import 'horizontal_weather_list.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weather/utils/border_text_style.dart';
+import 'package:weather/reusable_widgets/border_text_style.dart';
 import 'package:weather/utils/custom_typography.dart';
 import 'package:weather/utils/data_custom_format.dart';
 
