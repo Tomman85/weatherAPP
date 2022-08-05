@@ -1,2 +1,3 @@
 flutter/ephemeral
 lib/credentials.dart
+lib/firebase_options.dart
