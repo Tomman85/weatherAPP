@@ -72,8 +72,7 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
                   if (snapshot.hasData) {
                     dynamic data = snapshot.data;
 
-                    child=  SizedBox(
-
+                    child = SizedBox(
                       width: double.infinity,
                       child: Stack(
                         children: [
@@ -132,9 +131,12 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
                       ),
                     );
                   } else {
-                    child = Center(
-                      child: Lottie.asset(
-                        'lib/assets/lottie/61302-weather-icon.json',
+                    child = Scaffold(
+
+                      body: Center(
+                        child: Lottie.asset(
+                          'lib/assets/lottie/61302-weather-icon.json',
+                        ),
                       ),
                     );
                   }
