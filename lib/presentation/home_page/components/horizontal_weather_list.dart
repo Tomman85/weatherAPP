@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:icon_decoration/icon_decoration.dart';
 import 'package:intl/intl.dart';
+import 'package:weather/reusable_widgets/border_text_style.dart';
 import 'package:weather/utils/custom_typography.dart';
 import 'package:weather/utils/data_custom_format.dart';
 
 class HorizontalWeatherList extends StatelessWidget {
   final dynamic data;
-  final double windConverter;
+
 
   const HorizontalWeatherList({
     Key? key,
     required this.data,
-    required this.windConverter,
+
   }) : super(key: key);
 
   @override
@@ -26,27 +28,29 @@ class HorizontalWeatherList extends StatelessWidget {
         double itemWindAngle = data.hourlyWeatherModel[index].windDegree;
         String itemIcon =
             data.hourlyWeatherModel[index].weatherDescription[0].icon;
+        double windConverter =
+        ((data.hourlyWeatherModel[index].windSpeed * 1 / 1000) /
+            (1 / 3600));
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              //TODO zmienic 7200 na czas lokalny/offset lokalny
-              // currentTime< itemTime
-                   Text(
-                      DataCustomFormat.getCustomDateFormat(itemTime),
-                      style: CustomTypography.textStyleHour,
-                    ),
-                  // : Text(
-                  //     'now'.tr,
-                  //     style: CustomTypography.textStyleHour,
-                  //   ),
+              //TODO zmienic 7200 na czas lokalny/offset lokalnycurrentTime< itemTime2
+              BorderTextStyle(
+                child: Text(
+                  DataCustomFormat.getCustomDateFormat(itemTime),
+                  style: CustomTypography.textStyleBasic,
+                ),
+              ),
               const SizedBox(
                 height: 5,
               ),
-              Text("${itemTemperature.toStringAsFixed(0)}\u00B0",
-                  style: CustomTypography.textStyleHourTemp),
+              BorderTextStyle(
+                child: Text("${itemTemperature.toStringAsFixed(0)}\u00B0",
+                    style: CustomTypography.textStyleHourTemp),
+              ),
               SizedBox(
                   width: 50,
                   height: 50,
@@ -57,15 +61,25 @@ class HorizontalWeatherList extends StatelessWidget {
                 children: [
                   RotationTransition(
                     turns: AlwaysStoppedAnimation(itemWindAngle / 360),
-                    child: const Icon(
-                      Icons.arrow_right_alt,
-                      color: Colors.white,
-                      size: 20,
+                    child: const DecoratedIcon(
+                      icon: Icon(
+                        Icons.arrow_right_alt,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                      decoration: IconDecoration(
+                        border: IconBorder(
+                          color: Colors.black,
+                          
+                        ),
+                      ),
                     ),
                   ),
-                  Text(
-                    "${windConverter.toStringAsFixed(1)} km/h",
-                    style:  CustomTypography.textStyleWindSpeed,
+                  BorderTextStyle(
+                    child: Text(
+                      "${windConverter.toStringAsFixed(1)} km/h",
+                      style: CustomTypography.textStyleWindSpeed,
+                    ),
                   ),
                 ],
               ),
