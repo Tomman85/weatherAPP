@@ -6,20 +6,29 @@ import 'package:weather/presentation/search_page/components/autocomplete.dart';
 import 'package:weather/presentation/search_page/components/favorites_cities.dart';
 import 'package:weather/utils/custom_typography.dart';
 
-class SearchPage extends StatelessWidget {
+class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
   static const searchPageRouteName = '/searchPage';
 
   @override
+  State<SearchPage> createState() => _SearchPageState();
+}
+
+class _SearchPageState extends State<SearchPage> {
+  @override
   Widget build(BuildContext context) {
+    Box box = Hive.box(favCity);
+
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: box.isEmpty ? false : true,
         iconTheme: const IconThemeData(color: Colors.black),
         elevation: 0.0,
         backgroundColor: Colors.white,
         actions: [
           IconButton(
               onPressed: () {
+                setState(() {});
                 Hive.box(favCity).clear();
               },
               icon: const Icon(Icons.delete))
@@ -27,8 +36,8 @@ class SearchPage extends StatelessWidget {
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children:  [
-         const  SizedBox(
+        children: [
+          const SizedBox(
             height: 20,
           ),
           Padding(
@@ -39,7 +48,7 @@ class SearchPage extends StatelessWidget {
               style: CustomTypography.textStyleSettingsTitle,
             ),
           ),
-         const  SizedBox(
+          const SizedBox(
             height: 20,
           ),
           const AutocompletePredictions(),

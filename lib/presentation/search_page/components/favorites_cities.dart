@@ -4,6 +4,7 @@ import 'package:weather/const/hive_box_names.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:weather/models/hive_box_models/model_list_of_cities.dart';
 import 'package:weather/models/openweather_model/weather_data_response.dart';
+import 'package:weather/presentation/home_page/home_page.dart';
 import 'package:weather/presentation/search_page/components/delete_autocomplete_background.dart';
 import 'package:weather/services/repository_services/openweather_repository_service/openweather_repository_service.dart';
 import 'package:weather/utils/custom_typography.dart';
@@ -20,12 +21,10 @@ class _FavoritesCitiesState extends State<FavoritesCities> {
 
   bool isLoading = false;
 
-
-
-  Future _getCurrentWeatherData(lat, lon,lang) async {
+  Future _getCurrentWeatherData(lat, lon, lang) async {
     isLoading = true;
     currentDataResponse =
-        await OpenweatherRepositoryService.getOpenweatherData(lat, lon,lang);
+        await OpenweatherRepositoryService.getOpenweatherData(lat, lon, lang);
     isLoading = false;
     return currentDataResponse;
   }
@@ -71,8 +70,12 @@ class _FavoritesCitiesState extends State<FavoritesCities> {
                                 cityName: item.cityName,
                               ),
                             );
-                            setState(() {});
-                            Navigator.of(context).pop();
+                            box.length == 1
+                                ? Navigator.of(context)
+                                    .pushNamed(HomePage.homePageRouteName)
+                                : setState(() {Navigator.of(context).pop();}) ;
+
+
                           },
                           child: Container(
                             margin: const EdgeInsets.only(
@@ -96,10 +99,9 @@ class _FavoritesCitiesState extends State<FavoritesCities> {
                                       width: 200,
                                       child: SingleChildScrollView(
                                         scrollDirection: Axis.horizontal,
-                                        child: Text(
-                                          item.cityName.toString(),
-                                          style: CustomTypography.textStyleFavCity
-                                        ),
+                                        child: Text(item.cityName.toString(),
+                                            style: CustomTypography
+                                                .textStyleFavCity),
                                       ),
                                     ),
                                   ),
@@ -115,7 +117,8 @@ class _FavoritesCitiesState extends State<FavoritesCities> {
                                       return Center(
                                         child: Text(
                                           "${snapshot.data.currentWeatherModel.temperature.toStringAsFixed(0)} \u00B0",
-                                          style: CustomTypography.textStyleFavTemp,
+                                          style:
+                                              CustomTypography.textStyleFavTemp,
                                         ),
                                       );
                                     } else if (snapshot.hasError) {
