@@ -90,7 +90,6 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
                       color: Colors.grey.shade900,
                       onPressed: () async {
                         _getCurrentLocation();
-
                         Hive.box(favCity).values.toList().forEach((element) {
                           if (_currentAddress == element.cityName) {
                             checkAddress = true;

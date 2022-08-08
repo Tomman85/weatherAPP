@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:form_validator/form_validator.dart';
 import 'package:get/get.dart';
 
 class EmailFormField extends StatelessWidget {
@@ -13,6 +12,7 @@ class EmailFormField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 20),
       child: TextFormField(
+        keyboardType: TextInputType.emailAddress,
         validator: (val) {
           if (val!.isEmpty) {
             return 'emptyEmail'.tr;

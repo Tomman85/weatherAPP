@@ -7,7 +7,6 @@ import 'package:weather/presentation/login_page/login_page.dart';
 import 'package:weather/presentation/search_page/search_page.dart';
 import 'package:weather/presentation/settings_page/settings_page.dart';
 import 'package:weather/services/network_services/network_service.dart';
-
 import 'const/page_name_routes.dart';
 
 void main() async {

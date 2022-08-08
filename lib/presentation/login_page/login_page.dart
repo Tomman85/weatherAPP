@@ -35,7 +35,6 @@ class _LoginPageState extends State<LoginPage> {
     Widget firstChild = LoginButton(
       pointToOnPress: () {
         if (formKey.currentState!.validate()) {
-          print('valid');
         }
       },
     );
@@ -62,81 +61,82 @@ class _LoginPageState extends State<LoginPage> {
         backgroundColor: Colors.white,
         elevation: 0.0,
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Form(
-          key: formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Center(
-                child: Lottie.asset('lib/assets/lottie/32532-day-night.json',
-                    width: 200),
-              ),
-              const EmailFormField(),
-              PasswordFormField(
-                validator: passwordValidator,
-                isVisibility: isVisibility,
-                labelText: 'password'.tr,
-                pointToOnPress: () {
-                  isVisibility = !isVisibility;
-                  setState(() {});
-                },
-                textEditingController: _pass,
-              ),
-              AnimatedSwitcher(
-                duration: const Duration(seconds: 1),
-                child: child,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: TextButton(
-                  onPressed: () {},
-                  child: Text('forgotPassword'.tr),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Form(
+            key: formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Center(
+                  child: Lottie.asset('lib/assets/lottie/32532-day-night.json',
+                      width: 200),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 25),
-                child: Center(
-                  child: Text(
-                    'account'.tr,
-                    style: const TextStyle(
-                      color: Colors.grey,
+                const EmailFormField(),
+                PasswordFormField(
+                  validator: passwordValidator,
+                  isVisibility: isVisibility,
+                  labelText: 'password'.tr,
+                  pointToOnPress: () {
+                    isVisibility = !isVisibility;
+                    setState(() {});
+                  },
+                  textEditingController: _pass,
+                ),
+                AnimatedSwitcher(
+                  duration: const Duration(seconds: 1),
+                  child: child,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: TextButton(
+                    onPressed: () {},
+                    child: Text('forgotPassword'.tr),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 25),
+                  child: Center(
+                    child: Text(
+                      'account'.tr,
+                      style: const TextStyle(
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              RegisterButton(
-                onPressed: () {
-                  if (wantRegister == true) {
-                    if (formKey.currentState!.validate()) {
-                      print('valid');
+                RegisterButton(
+                  onPressed: () {
+                    if (wantRegister == true) {
+                      if (formKey.currentState!.validate()) {
+                      }
                     }
-                  }
-                  wantRegister = true;
-                  setState(() {});
-                },
-              ),
-              wantRegister
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: GestureDetector(
-                        onTap: () {
-                          wantRegister = false;
-                          setState(() {});
-                        },
-                        child: Center(
-                          child: Text(
-                            'wannaLogin'.tr,
-                            style: const TextStyle(
-                              color: Colors.grey,
+                    wantRegister = true;
+                    setState(() {});
+                  },
+                ),
+                wantRegister
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 20,bottom: 50),
+                        child: GestureDetector(
+                          onTap: () {
+                            wantRegister = false;
+                            setState(() {});
+                          },
+                          child: Center(
+                            child: Text(
+                              'wannaLogin'.tr,
+                              style: const TextStyle(
+                                color: Colors.grey,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    )
-                  : Container(),
-            ],
+                      )
+                    : Container(),
+              ],
+            ),
           ),
         ),
       ),

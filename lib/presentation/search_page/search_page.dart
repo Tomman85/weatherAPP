@@ -36,25 +36,28 @@ class SearchPage extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Text(
-              'cityManagement'.tr,
-              textAlign: TextAlign.end,
-              style: CustomTypography.textStyleSettingsTitle,
+      body: CustomScrollView(
+        slivers: [
+          SliverFillRemaining(
+            hasScrollBody: false,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Spacer(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    'cityManagement'.tr,
+                    textAlign: TextAlign.end,
+                    style: CustomTypography.textStyleSettingsTitle,
+                  ),
+                ),
+                const Spacer(),
+                const AutocompletePredictions(),
+                const FavoritesCities(),
+              ],
             ),
           ),
-          const SizedBox(
-            height: 20,
-          ),
-          const AutocompletePredictions(),
-          const FavoritesCities(),
         ],
       ),
     );
