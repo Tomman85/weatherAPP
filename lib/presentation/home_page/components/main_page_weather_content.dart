@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -12,6 +13,7 @@ import 'package:weather/presentation/search_page/search_page.dart';
 import 'package:weather/presentation/settings_page/settings_page.dart';
 import 'package:weather/services/repository_services/openweather_repository_service/openweather_repository_service.dart';
 import 'package:weather/reusable_widgets/border_text_style.dart';
+import 'package:weather/utils/custom_typography.dart';
 import 'current_weather_box.dart';
 import 'daily_weather_list.dart';
 import 'horizontal_weather_list.dart';
@@ -49,7 +51,6 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent>
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -60,7 +61,9 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent>
         Box box = Hive.box(favCity);
 
         return FutureBuilder(
-          future: Hive.box(favCity).isEmpty?null: _getWeatherData(
+          future: Hive.box(favCity).isEmpty
+              ? null
+              : _getWeatherData(
                   box.getAt(Hive.box(favCity).length - 1).latitude,
                   box.getAt(Hive.box(favCity).length - 1).longitude,
                   'language'.tr),
@@ -68,12 +71,46 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent>
             BuildContext context,
             AsyncSnapshot snapshot,
           ) {
-             if (snapshot.hasData) {
+            if (Hive.box(favCity).isEmpty) {
+              child = Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 60.0),
+                  child: FractionallySizedBox(
+                    widthFactor: 0.8,
+                    heightFactor: 1,
+                    child: Column(
+                      children: [
+                        Lottie.asset(
+                          'lib/assets/lottie/93134-not-found.json',
+                          frameRate: FrameRate(120),
+                        ),
+                        Text(
+                          'Nie posiadasz żadnego miasta aby wyświetlić informacje pogodową. Aby dodać wybrane miasto kliknji przycisk poniżej',
+                          style: CustomTypography.textStyleAutocompleteBasic,
+                          textAlign: TextAlign.center,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 200),
+                          child: Align(
+                            alignment: Alignment.bottomRight,
+                            child: FloatingActionButton(
+                                onPressed: () {
+                                  Navigator.of(context)
+                                      .pushNamed(SearchPage.searchPageRouteName);
+                                },
+                                child: Icon(Icons.add)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            } else if (snapshot.hasData) {
               dynamic data = snapshot.data;
 
               child = Scaffold(
                 key: ValueKey(1),
-
                 extendBodyBehindAppBar: true,
                 appBar: AppBar(
                   title: BorderTextStyle(
@@ -196,15 +233,24 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent>
             return Scaffold(
               body: AnimatedSwitcher(
                 transitionBuilder: (child, animation) => FadeTransition(
-                  opacity: Tween<double>(begin: 0.0, end: 1.0).animate(
-                    CurvedAnimation(
-                      parent: animation,
-                      curve: const Interval(0.4, 0.5),
-                    ),
-                  ),
+                  opacity: Hive.box(favCity).isEmpty
+                      ? Tween<double>(begin: 0.0, end: 0.7).animate(
+                          CurvedAnimation(
+                            parent: animation,
+                            curve: const Interval(0.2, 0.6),
+                          ),
+                        )
+                      : Tween<double>(begin: 0.0, end: 1.0).animate(
+                          CurvedAnimation(
+                            parent: animation,
+                            curve: const Interval(0.4, 0.5),
+                          ),
+                        ),
                   child: child,
                 ),
-                duration:  Hive.box(favCity).isEmpty?const Duration(milliseconds: 100 ):const Duration(seconds:8 ),
+                duration: Hive.box(favCity).isEmpty
+                    ? const Duration(seconds: 2)
+                    : const Duration(seconds: 4),
                 child: child,
               ),
             );

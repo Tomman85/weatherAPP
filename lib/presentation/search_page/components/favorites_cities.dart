@@ -39,104 +39,102 @@ class _FavoritesCitiesState extends State<FavoritesCities> {
           return Container(
             padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 10),
             height: 600,
-            child: box.isEmpty
-                ? const Text('Task na next week')
-                : ListView.builder(
-                    itemCount: box.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final item = citiesList[index];
-                      return Dismissible(
-                        key: UniqueKey(),
-                        direction: DismissDirection.startToEnd,
-                        onDismissed: (direction) {
-                          if (direction == DismissDirection.startToEnd) {
-                            setState(() {
-                              // citiesList.removeAt(index);
-                              box.deleteAt(index);
-                            });
-                          }
-                        },
-                        confirmDismiss: (DismissDirection direction) async {
-                          return await buildShowDialog(context);
-                        },
-                        background: const DeleteAutocompleteBackground(),
-                        child: GestureDetector(
-                          onTap: () {
-                            box.deleteAt(index);
-                            box.add(
-                              DataModel(
-                                latitude: item.latitude,
-                                longitude: item.longitude,
-                                cityName: item.cityName,
-                              ),
-                            );
-                            box.length == 1
-                                ? Navigator.of(context)
-                                    .pushNamed(HomePage.homePageRouteName)
-                                : setState(() {Navigator.of(context).pop();}) ;
-
-
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.only(
-                              top: 15,
-                            ),
-                            padding: const EdgeInsets.only(left: 20, right: 20),
-                            decoration: BoxDecoration(
-                              color: Colors.lightBlue.shade800,
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                color: Colors.grey.shade300,
-                              ),
-                            ),
-                            height: 110,
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: SizedBox(
-                                      width: 200,
-                                      child: SingleChildScrollView(
-                                        scrollDirection: Axis.horizontal,
-                                        child: Text(item.cityName.toString(),
-                                            style: CustomTypography
-                                                .textStyleFavCity),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                FutureBuilder(
-                                  future: _getCurrentWeatherData(
-                                    item.latitude.toString(),
-                                    item.longitude.toString(),
-                                    "pl",
-                                  ),
-                                  builder: (context, AsyncSnapshot snapshot) {
-                                    if (snapshot.hasData) {
-                                      return Center(
-                                        child: Text(
-                                          "${snapshot.data.currentWeatherModel.temperature.toStringAsFixed(0)} \u00B0",
-                                          style:
-                                              CustomTypography.textStyleFavTemp,
-                                        ),
-                                      );
-                                    } else if (snapshot.hasError) {
-                                      return Text('${snapshot.error}');
-                                    }
-
-                                    return const CircularProgressIndicator(
-                                      color: Colors.white,
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
+            child: ListView.builder(
+              itemCount: box.length,
+              itemBuilder: (BuildContext context, int index) {
+                final item = citiesList[index];
+                return Dismissible(
+                  key: UniqueKey(),
+                  direction: DismissDirection.startToEnd,
+                  onDismissed: (direction) {
+                    if (direction == DismissDirection.startToEnd) {
+                      setState(() {
+                        // citiesList.removeAt(index);
+                        box.deleteAt(index);
+                      });
+                    }
+                  },
+                  confirmDismiss: (DismissDirection direction) async {
+                    return await buildShowDialog(context);
+                  },
+                  background: const DeleteAutocompleteBackground(),
+                  child: GestureDetector(
+                    onTap: () {
+                      box.deleteAt(index);
+                      box.add(
+                        DataModel(
+                          latitude: item.latitude,
+                          longitude: item.longitude,
+                          cityName: item.cityName,
                         ),
                       );
+
+                      setState(() {});
+                      Navigator.of(context).pop();
                     },
+                    child: Container(
+                      margin: const EdgeInsets.only(
+                        top: 15,
+                      ),
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      decoration: BoxDecoration(
+                        color: Colors.lightBlue.shade800,
+                        borderRadius: BorderRadius.circular(20),
+                        border: box.length - 1 == index
+                            ? Border.all(
+                                color: Colors.amber,
+                                width: 3,
+                              )
+                            : Border.all(
+                                color: Colors.grey.shade300,
+                              ),
+                      ),
+                      height: 110,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: SizedBox(
+                                width: 200,
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Text(item.cityName.toString(),
+                                      style: CustomTypography.textStyleFavCity),
+                                ),
+                              ),
+                            ),
+                          ),
+                          FutureBuilder(
+                            future: _getCurrentWeatherData(
+                              item.latitude.toString(),
+                              item.longitude.toString(),
+                              "pl",
+                            ),
+                            builder: (context, AsyncSnapshot snapshot) {
+                              if (snapshot.hasData) {
+                                return Center(
+                                  child: Text(
+                                    "${snapshot.data.currentWeatherModel.temperature.toStringAsFixed(0)} \u00B0",
+                                    style: CustomTypography.textStyleFavTemp,
+                                  ),
+                                );
+                              } else if (snapshot.hasError) {
+                                return Text('${snapshot.error}');
+                              }
+
+                              return const CircularProgressIndicator(
+                                color: Colors.white,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
+                );
+              },
+            ),
           );
         });
   }

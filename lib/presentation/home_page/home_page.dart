@@ -29,9 +29,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      body: Hive.box(favCity).isEmpty
-          ? const SearchPage()
-          : const MainPageWeatherContent(),
+      body:  const MainPageWeatherContent(),
     );
   }
 }

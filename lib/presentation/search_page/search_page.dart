@@ -21,7 +21,7 @@ class _SearchPageState extends State<SearchPage> {
 
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: box.isEmpty ? false : true,
+
         iconTheme: const IconThemeData(color: Colors.black),
         elevation: 0.0,
         backgroundColor: Colors.white,
