@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 
 class CustomTypography {
-  static TextStyle textStyleHour = TextStyle(
-    color: Colors.white.withOpacity(0.6),
-  );
   static TextStyle textStyleHourTemp = const TextStyle(
     color: Colors.white,
     fontWeight: FontWeight.bold,

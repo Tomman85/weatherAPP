@@ -7,6 +7,7 @@ import 'package:weather/const/page_name_routes.dart';
 import 'package:weather/models/openweather_model/weather_data_response.dart';
 import 'package:weather/presentation/home_page/components/weather_background_builder.dart';
 import 'package:weather/services/repository_services/openweather_repository_service/openweather_repository_service.dart';
+import 'package:weather/reusable_widgets/border_text_style.dart';
 import 'current_weather_box.dart';
 import 'daily_weather_list.dart';
 import 'horizontal_weather_list.dart';
@@ -66,12 +67,11 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
                   BuildContext context,
                   AsyncSnapshot snapshot,
                 ) {
+                  Widget child;
                   if (snapshot.hasData) {
                     dynamic data = snapshot.data;
-                    double windConverter =
-                        ((data.currentWeatherModel.windSpeed * 1 / 1000) /
-                            (1 / 3600));
-                    return Container(
+
+                    child = SizedBox(
                       width: double.infinity,
                       child: Stack(
                         children: [
@@ -93,19 +93,20 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
                                   MainCurrentWeather(
                                     data: data,
                                   ),
-                                  Text(
-                                    "${data.currentWeatherModel.weatherDescription[0].description} ",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.white.withOpacity(0.6),
+                                  BorderTextStyle(
+                                    child: Text(
+                                      "${data.currentWeatherModel.weatherDescription[0].description} ",
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                      ),
+                                      textAlign: TextAlign.start,
                                     ),
-                                    textAlign: TextAlign.start,
                                   ),
                                   SizedBox(
                                     height: size.height * 0.2,
                                     child: HorizontalWeatherList(
                                       data: data,
-                                      windConverter: windConverter,
                                     ),
                                   ),
                                   SizedBox(
@@ -129,10 +130,28 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
                       ),
                     );
                   } else {
-                    return Center(
-                      child: Text('ładowanie'),
+                    child = Scaffold(
+
+                      body: Center(
+                        child: Lottie.asset(
+                          'lib/assets/lottie/61302-weather-icon.json',
+                        ),
+                      ),
                     );
                   }
+                  return AnimatedSwitcher(
+                    transitionBuilder: (child, animation) => FadeTransition(
+                      opacity: Tween<double>(begin: 0.0, end: 1.0).animate(
+                        CurvedAnimation(
+                          parent: animation,
+                          curve: const Interval(0.4, 0.5),
+                        ),
+                      ),
+                      child: child,
+                    ),
+                    duration: const Duration(seconds: 8),
+                    child: child,
+                  );
                 },
               );
       },

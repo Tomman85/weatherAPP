@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:icon_decoration/icon_decoration.dart';
 import 'package:weather/const/hive_box_names.dart';
 import 'package:weather/const/page_name_routes.dart';
 import 'components/main_page_weather_content.dart';
@@ -11,6 +12,11 @@ class HomePage extends StatefulWidget {
 
   @override
   State<HomePage> createState() => _HomePageState();
+}
+
+String splitBox(Box box) {
+  String boxToString = box.getAt(box.length - 1).cityName.toString();
+  return boxToString.split(',')[0];
 }
 
 class _HomePageState extends State<HomePage> {
@@ -25,23 +31,34 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               Navigator.of(context).pushNamed(settingsPageRouteName);
             },
-            icon: const Icon(Icons.settings),
+            icon: const DecoratedIcon(
+              decoration: IconDecoration(
+                border: IconBorder(
+                  color: Colors.black26,
+                  width: 5,
+                ),
+              ),
+              icon: Icon(
+                Icons.settings,
+              ),
+            ),
           ),
         ],
         title: ValueListenableBuilder(
           valueListenable: Hive.box(favCity).listenable(),
           builder: (BuildContext context, value, Widget? child) {
-            var box = Hive.box(favCity);
-
+            Box box = Hive.box(favCity);
             return box.isEmpty
                 ? Text(
-                    'brak',
+                    'brak',style: TextStyle(color: Colors.blue),
                   )
-                : Text(
-                    box.getAt(box.length - 1).cityName.toString().split(',')[0],
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 30,
+                : BorderTextStyle(
+                    child: Text(
+                      splitBox(box),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                      ),
                     ),
                   );
           },
@@ -54,7 +71,15 @@ class _HomePageState extends State<HomePage> {
               searchPageRouteName,
             );
           },
-          child: const Icon(Icons.add),
+          child: const DecoratedIcon(
+            icon: Icon(Icons.add_circle_outlined),
+            decoration: IconDecoration(
+              border: IconBorder(
+                color: Colors.black26,
+                width: 5,
+              ),
+            ),
+          ),
         ),
       ),
       body: const MainPageWeatherContent(),
