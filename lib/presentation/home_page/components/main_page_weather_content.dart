@@ -2,11 +2,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:lottie/lottie.dart';
 import 'package:weather/const/hive_box_names.dart';
+import 'package:weather/const/page_name_routes.dart';
 import 'package:weather/models/openweather_model/weather_data_response.dart';
 import 'package:weather/presentation/home_page/components/weather_background_builder.dart';
-import 'package:weather/presentation/search_page/search_page.dart';
 import 'package:weather/services/repository_services/openweather_repository_service/openweather_repository_service.dart';
 import 'package:weather/reusable_widgets/border_text_style.dart';
 import 'current_weather_box.dart';
@@ -53,12 +52,12 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent> {
         return box.isEmpty
             ? Center(
                 child: GestureDetector(
-                    onTap: () {
-                      Navigator.of(context)
-                          .pushNamed(SearchPage.searchPageRouteName);
-                    },
-                    child:
-                        const Text('empty TODO KLIKAJ W TO JAK JEST PUSTO ')))
+                  onTap: () {
+                    Navigator.of(context).pushNamed(searchPageRouteName);
+                  },
+                  child: const Text('empty TODO KLIKAJ W TO JAK JEST PUSTO '),
+                ),
+              )
             : FutureBuilder(
                 future: _getWeatherData(
                     box.getAt(Hive.box(favCity).length - 1).latitude,

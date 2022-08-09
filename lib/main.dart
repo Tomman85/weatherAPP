@@ -3,9 +3,11 @@ import 'package:get/get.dart';
 import 'package:weather/assets/text/locale_strings.dart';
 import 'package:weather/config/hive_setup.dart';
 import 'package:weather/presentation/home_page/home_page.dart';
+import 'package:weather/presentation/login_page/login_page.dart';
 import 'package:weather/presentation/search_page/search_page.dart';
 import 'package:weather/presentation/settings_page/settings_page.dart';
 import 'package:weather/services/network_services/network_service.dart';
+import 'const/page_name_routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,12 +32,12 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Colors.white,
       ),
-      initialRoute: HomePage.homePageRouteName,
+      initialRoute: homePageRouteName,
       routes: {
-
-        HomePage.homePageRouteName: (context) => const HomePage(),
-        SearchPage.searchPageRouteName: (context) => const SearchPage(),
-        SettingsPage.settingsPageRouteName: (context) => const SettingsPage(),
+        loginPageRouteName: (context) => const LoginPage(),
+        homePageRouteName: (context) => const HomePage(),
+        searchPageRouteName: (context) => const SearchPage(),
+        settingsPageRouteName: (context) => const SettingsPage(),
       },
     );
   }
