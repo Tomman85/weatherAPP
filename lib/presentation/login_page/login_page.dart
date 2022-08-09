@@ -15,7 +15,7 @@ import 'package:weather/presentation/login_page/components/register_button.dart'
 import 'package:weather/utils/error_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fbAuth;
 
-import '../../const/hive_box_names.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
