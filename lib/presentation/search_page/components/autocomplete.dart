@@ -10,7 +10,7 @@ import 'package:weather/models/autocomplete_model/list_response.dart';
 import 'package:weather/models/autocomplete_model/prediction_model.dart';
 import 'package:weather/models/hive_box_models/model_list_of_cities.dart';
 import 'package:weather/services/repository_services/autocomplete_repository_service/autocomplete_repository_service.dart';
-import 'package:weather/services/repository_services/firebase_repository/profile_repository.dart';
+import 'package:weather/utils/authentications.dart';
 import 'package:weather/utils/autocomplete_show_dialog.dart';
 import 'package:weather/utils/custom_typography.dart';
 
@@ -33,8 +33,8 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
     isLoading = true;
     setState(() {});
     listDataResponse =
-        await AutocompleteRepositoryService.getAutocompletePrediction(
-            name, lang);
+    await AutocompleteRepositoryService.getAutocompletePrediction(
+        name, lang);
     predictionModel = listDataResponse?.predictionModel;
     isLoading = false;
     setState(() {});
@@ -94,7 +94,11 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
                       onPressed: () async {
                         _getCurrentLocation();
 
-                        Hive.box(favCity).values.toList().forEach((element) {
+                        Hive
+                            .box(favCity)
+                            .values
+                            .toList()
+                            .forEach((element) {
                           if (_currentAddress == element.cityName) {
                             checkAddress = true;
                           }
@@ -108,10 +112,15 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
                             ),
                           );
                         }
-                        if (context.read<AuthBloc>().state.authStatus ==
+                        if (context
+                            .read<AuthBloc>()
+                            .state
+                            .authStatus ==
                             AuthStatus.authenticated) {
-                          ProfileRepository.updateData("mojeid");
+                          Authentication.updateData();
+
                         }
+                        setState(() {});
                       },
                     ),
                     enabledBorder: const OutlineInputBorder(
@@ -156,7 +165,8 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
                         return GestureDetector(
                           onTap: () {
                             onSelected(option);
-                            Hive.box(favCity)
+                            Hive
+                                .box(favCity)
                                 .values
                                 .toList()
                                 .forEach((element) {
@@ -175,30 +185,33 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
                               );
                               checkAddress = false;
                             }
-                            if (context.read<AuthBloc>().state.authStatus ==
+                            if (context
+                                .read<AuthBloc>()
+                                .state
+                                .authStatus ==
                                 AuthStatus.authenticated) {
-                              ProfileRepository.updateData("mojeid");
+                              Authentication.updateData();
                             }
                             setState(() {});
                           },
                           child: isLoading
                               ? const Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Center(
-                                    child: SizedBox(
-                                      child: CircularProgressIndicator(
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              : ListTile(
-                                  title: Text(
-                                    option.formatted.toString(),
-                                    style: CustomTypography
-                                        .textStyleAutocompleteBasic,
-                                  ),
+                            padding: EdgeInsets.all(8.0),
+                            child: Center(
+                              child: SizedBox(
+                                child: CircularProgressIndicator(
+                                  color: Colors.grey,
                                 ),
+                              ),
+                            ),
+                          )
+                              : ListTile(
+                            title: Text(
+                              option.formatted.toString(),
+                              style: CustomTypography
+                                  .textStyleAutocompleteBasic,
+                            ),
+                          ),
                         );
                       },
                     ),
@@ -252,8 +265,8 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
     }
 
     Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.best,
-            forceAndroidLocationManager: true)
+        desiredAccuracy: LocationAccuracy.best,
+        forceAndroidLocationManager: true)
         .then((Position position) {
       setState(() {
         _position = position;

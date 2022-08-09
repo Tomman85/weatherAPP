@@ -43,6 +43,7 @@ class LocaleString extends Translations {
           'shortPassword': 'Password must be at least 8 digits long',
           'specialPassword':'Passwords must have at least one special character',
           'matchPassword':'Passwords do not match',
+          'login':'Login',
         },
         'pl_PL': {
           'sunrise': 'Wschód słońca',
@@ -85,6 +86,7 @@ class LocaleString extends Translations {
           'shortPassword': 'Hasło musi zawierać co najmniej 8 znaków',
           'specialPassword':'Hasło musi zawierać co najmniej jeden specjalny znak',
           'matchPassword':'Hasła nie pasują do siebie',
+          'login':'Zaloguj się',
 
         }
       };

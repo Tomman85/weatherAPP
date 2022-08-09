@@ -9,7 +9,9 @@ import 'package:weather/models/openweather_model/weather_data_response.dart';
 import 'package:weather/presentation/search_page/components/delete_autocomplete_background.dart';
 import 'package:weather/services/repository_services/firebase_repository/profile_repository.dart';
 import 'package:weather/services/repository_services/openweather_repository_service/openweather_repository_service.dart';
+import 'package:weather/utils/authentications.dart';
 import 'package:weather/utils/custom_typography.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fbAuth;
 
 class FavoritesCities extends StatefulWidget {
   const FavoritesCities({Key? key}) : super(key: key);
@@ -52,15 +54,15 @@ class _FavoritesCitiesState extends State<FavoritesCities> {
                         direction: DismissDirection.startToEnd,
                         onDismissed: (direction) {
                           if (direction == DismissDirection.startToEnd) {
-                            setState(() {
-                              // citiesList.removeAt(index);
-                              box.deleteAt(index);
-                            });
+                            box.deleteAt(index);
+                            setState(() {});
+
                             if (context.read<AuthBloc>().state.authStatus ==
                                 AuthStatus.authenticated) {
-                             ProfileRepository.updateData("mojeid");
+                              Authentication.updateData();
                             }
                           }
+                          setState(() {});
                         },
                         confirmDismiss: (DismissDirection direction) async {
                           return await buildShowDialog(context);

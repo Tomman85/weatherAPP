@@ -30,6 +30,8 @@ class AuthRepository {
       await usersRef.doc(signedInUser.uid).set({
         'name': name,
         'email': email,
+        'cities':[],
+
       });
     } on fbAuth.FirebaseAuthException catch (e) {
       throw CustomError(

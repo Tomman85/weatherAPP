@@ -3,7 +3,9 @@ import 'package:hive/hive.dart';
 import 'package:weather/const/db_constants.dart';
 import 'package:weather/const/hive_box_names.dart';
 import 'package:weather/models/custom_error_model/custom_error_model.dart';
+import 'package:weather/models/hive_box_models/model_list_of_cities.dart';
 import 'package:weather/models/user_model/user_model.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fbAuth;
 
 class ProfileRepository {
   final FirebaseFirestore firebaseFirestore;
@@ -28,26 +30,5 @@ class ProfileRepository {
           message: e.toString(),
           plugin: 'flutter_error/server_error');
     }
-  }
-
-
- static Future<void> updateData(String uid) async {
-
-    final Map<String, String> myMap = {};
-    final db = FirebaseFirestore.instance;
-db.collection("users").doc(uid).delete();
-    Hive.box(favCity).values.toList().forEach((element) {
-      print(element.cityName);
-      myMap.addAll({
-        'name': element.cityName.toString().split(",")[0],
-        'latitude': element.latitude,
-        'longitude': element.latitude,
-      });
-
-      db.collection("users").doc(uid).set(
-        {element.cityName: myMap},
-        SetOptions(merge: true),
-      );
-    });
   }
 }

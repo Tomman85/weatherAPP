@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -7,10 +8,13 @@ import 'package:weather/const/hive_box_names.dart';
 import 'package:weather/const/page_name_routes.dart';
 import 'package:weather/cubit/sign_in/sign_in_cubit.dart';
 import 'package:weather/cubit/user/user_cubit.dart';
+import 'package:weather/models/hive_box_models/model_list_of_cities.dart';
 import 'package:weather/presentation/search_page/components/autocomplete.dart';
 import 'package:weather/presentation/search_page/components/favorites_cities.dart';
 import 'package:weather/services/repository_services/firebase_repository/profile_repository.dart';
+import 'package:weather/utils/authentications.dart';
 import 'package:weather/utils/custom_typography.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fbAuth;
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -34,12 +38,7 @@ class _SearchPageState extends State<SearchPage> {
         elevation: 0.0,
         backgroundColor: Colors.white,
         actions: [
-          IconButton(
-              onPressed: () {
-                if(context.read<AuthBloc>().state.authStatus ==
-                    AuthStatus.authenticated){ProfileRepository.updateData('mojeid');}
-              },
-              icon: Icon(Icons.ac_unit_outlined)),
+
           IconButton(
             onPressed: () {
               context.read<AuthBloc>().add(SignOutRequestEvent());
@@ -50,6 +49,7 @@ class _SearchPageState extends State<SearchPage> {
           IconButton(
               onPressed: () {
                 Hive.box(favCity).clear();
+                Authentication.clearAllData();
               },
               icon: const Icon(Icons.delete)),
         ],
@@ -64,8 +64,8 @@ class _SearchPageState extends State<SearchPage> {
                   Navigator.pushNamed(context, loginPageRouteName);
                 },
                 child: Text(
-                  'Zaloguj sie',
-                  style: TextStyle(color: Colors.red),
+                  'login'.tr,
+                  style: const TextStyle(color: Colors.black),
                 ),
               ),
         centerTitle: true,

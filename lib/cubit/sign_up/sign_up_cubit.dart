@@ -13,10 +13,11 @@ class SignUpCubit extends Cubit<SignUpState> {
   Future<void> SignUp({
     required String email,
     required String password,
+    required List cities,
   }) async {
     emit(state.copyWith(signUpStatus: SignUpStatus.submitting));
     try {
-      await authRepository.signUp(email: email, password: password, name: email.split('@')[0]);
+      await authRepository.signUp(email: email, password: password, name: email.split('@')[0],);
       emit(
         state.copyWith(
           signUpStatus: SignUpStatus.success,

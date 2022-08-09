@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
 import 'package:weather/cubit/sign_in/sign_in_cubit.dart';
 import 'package:weather/cubit/sign_up/sign_up_cubit.dart';
@@ -12,10 +11,10 @@ import 'package:weather/presentation/login_page/components/email_form_field.dart
 import 'package:weather/presentation/login_page/components/login_button.dart';
 import 'package:weather/presentation/login_page/components/password_form_field.dart';
 import 'package:weather/presentation/login_page/components/register_button.dart';
+import 'package:weather/utils/authentications.dart';
+import 'package:weather/utils/autocomplete_show_dialog.dart';
 import 'package:weather/utils/error_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fbAuth;
-
-
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -35,12 +34,6 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _confirmPass = TextEditingController();
   final TextEditingController _email = TextEditingController();
 
-  final passwordValidator = MultiValidator([
-    RequiredValidator(errorText: 'emptyPassword'.tr),
-    MinLengthValidator(8, errorText: 'shortPassword'.tr),
-    PatternValidator(r'(?=.*?[#?!@$%^&*-])', errorText: 'specialPassword'.tr)
-  ]);
-
   @override
   Widget build(BuildContext context) {
     final db = FirebaseFirestore.instance;
@@ -49,7 +42,27 @@ class _LoginPageState extends State<LoginPage> {
         if (state.signInStatus == SignInStatus.error) {
           errorDialog(context, state.error);
         } else if (state.signInStatus == SignInStatus.success) {
-          Navigator.of(context).pop();
+          AutocompleteShowDialog.loginShowDialog(
+            context: context,
+            contentText: 'Czy chcesz schynchronizować bieżące miasta?',
+            child: TextButton(
+              child: Text('Tak'),
+              onPressed: () {
+                Authentication.updateDataWhenRegisterAndLogin();
+                //This could be strange that u see 2x pop, but it helps me with the bug
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+            ),
+            secondChild: TextButton(
+              child: Text('Nie'),
+              onPressed: () {
+                Authentication.clearAndUpdate();
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+            ),
+          );
         }
       },
       child: LoginButton(
@@ -61,9 +74,10 @@ class _LoginPageState extends State<LoginPage> {
                 : context
                     .read<SignInCubit>()
                     .SignIn(email: _email.text, password: _pass.text)
-                    .then((_) => context.read<UserCubit>().getProfile(
-                        uid: fbAuth.FirebaseAuth.instance.currentUser?.uid));
-            print('valid');
+                    .then(
+                      (_) => context.read<UserCubit>().getProfile(
+                          uid: fbAuth.FirebaseAuth.instance.currentUser?.uid),
+                    );
           }
         },
       ),
@@ -92,13 +106,26 @@ class _LoginPageState extends State<LoginPage> {
         if (state.signUpStatus == SignUpStatus.error) {
           errorDialog(context, state.error);
         } else if (state.signUpStatus == SignUpStatus.success) {
-          Navigator.of(context).pop();
+          AutocompleteShowDialog.loginShowDialog(
+            context: context,
+            contentText:
+                'Konto zostało utworzone. Dane zostaną synchronizowane',
+            child: TextButton(
+              child: const Text('Ok'),
+              onPressed: () {
+                Authentication.updateDataWhenRegisterAndLogin();
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+            ),
+            secondChild: Container(),
+          );
         }
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.blue),
+          iconTheme: const IconThemeData(color: Colors.blue),
           backgroundColor: Colors.white,
           elevation: 0.0,
         ),
@@ -117,7 +144,7 @@ class _LoginPageState extends State<LoginPage> {
                   editingController: _email,
                 ),
                 PasswordFormField(
-                  validator: passwordValidator,
+                  validator: Authentication.passwordValidator,
                   isVisibility: isVisibility,
                   labelText: 'password'.tr,
                   pointToOnPress: () {
@@ -152,17 +179,22 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () {
                     if (wantRegister == true) {
                       if (formKey.currentState!.validate()) {
-                        print('valid');
                         if (context.read<SignUpCubit>().state.signUpStatus ==
                             SignUpStatus.submitting) {
                           null;
                         } else {
                           context
                               .read<SignUpCubit>()
-                              .SignUp(email: _email.text, password: _pass.text)
+                              .SignUp(
+                                email: _email.text,
+                                password: _pass.text,
+                                cities: [],
+                              )
                               .then((_) => context.read<UserCubit>().getProfile(
                                   uid: fbAuth
-                                      .FirebaseAuth.instance.currentUser?.uid));
+                                      .FirebaseAuth.instance.currentUser?.uid))
+                              .then((_) => Authentication
+                                  .updateDataWhenRegisterAndLogin());
                         }
                       }
                     }
