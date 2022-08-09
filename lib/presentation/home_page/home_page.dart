@@ -3,6 +3,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:icon_decoration/icon_decoration.dart';
 import 'package:weather/const/hive_box_names.dart';
 import 'package:weather/const/page_name_routes.dart';
+import 'package:weather/reusable_widgets/border_text_style.dart';
 import 'components/main_page_weather_content.dart';
 
 class HomePage extends StatefulWidget {

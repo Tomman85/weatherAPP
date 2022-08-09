@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:lottie/lottie.dart';
 import 'package:weather/const/hive_box_names.dart';
 import 'package:weather/const/page_name_routes.dart';
 import 'package:weather/models/openweather_model/weather_data_response.dart';
