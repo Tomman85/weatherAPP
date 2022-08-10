@@ -1,11 +1,15 @@
+import 'dart:async';
+
+import 'package:countup/countup.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:weather/presentation/home_page/components/build_current_weather_box_row.dart';
+import 'package:weather/presentation/home_page/components/sun_arch.dart';
 import 'package:weather/utils/custom_typography.dart';
 import 'package:weather/utils/data_custom_format.dart';
 
-class CurrentWeatherBox extends StatelessWidget {
-   CurrentWeatherBox({
+class CurrentWeatherBox extends StatefulWidget {
+  CurrentWeatherBox({
     Key? key,
     required this.size,
     required this.data,
@@ -13,32 +17,65 @@ class CurrentWeatherBox extends StatelessWidget {
 
   final Size size;
   final dynamic data;
- DateTime dateTime = DateTime.now();
- 
 
-  //TODO Dodana tu jeszcze bedzie animacja słońca
   @override
-  Widget build(BuildContext context) {print(dateTime.timeZoneOffset.inSeconds);
+  State<CurrentWeatherBox> createState() => _CurrentWeatherBoxState();
+}
+
+class _CurrentWeatherBoxState extends State<CurrentWeatherBox> {
+  DateTime dateTime = DateTime.now();
+  late Timer timer;
+
+  double getDegree() {
+    if ((widget.data.currentWeatherModel.currentTime + widget.data.timeOffset) <
+        (widget.data.currentWeatherModel.sunrise + widget.data.timeOffset)) {
+      return 0;
+    } else if ((widget.data.currentWeatherModel.currentTime +
+            widget.data.timeOffset) >
+        (widget.data.currentWeatherModel.sunset + widget.data.timeOffset)) {
+      return 2;
+    }
+    double dailyHour = double.parse(DataCustomFormat.getHourDateFormat(
+        widget.data.currentWeatherModel.sunset -
+            widget.data.currentWeatherModel.sunrise));
+    double angle = (2 / dailyHour) *
+        double.parse(DataCustomFormat.getHourDateFormat(
+            (widget.data.currentWeatherModel.currentTime +
+                    widget.data.timeOffset) -
+                widget.data.currentWeatherModel.sunrise));
+    return angle;
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    double degree = getDegree();
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
       margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(
-          20,
-        ),
+        color: Colors.white.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(20.0),
       ),
-      height: size.height * 0.4,
+      height: widget.size.height * 0.4,
       child: Column(
         children: [
+          SunArch(
+            lineDegree: degree,
+            sunDegree: degree + 2.15,
+            color: degree >= 2 ? Colors.grey.shade500 : Colors.yellow,
+          ),
           const Spacer(),
-          BuildCurrentWeatherBoxRow(
-            style: CustomTypography.textStyleDetailedRowTime,
-            firstColumnData:
-                "${'sunrise'.tr} ${DataCustomFormat.getCustomDateFormat(data.currentWeatherModel.sunrise + data.timeOffset )}",
-            secondColumnData:
-                "${'sunset'.tr} ${DataCustomFormat.getCustomDateFormat(data.currentWeatherModel.sunset + data.timeOffset)}",
+          Padding(
+            padding: const EdgeInsets.only(top: 50),
+            child: BuildCurrentWeatherBoxRow(
+              style: CustomTypography.textStyleDetailedRowTime,
+              firstColumnData:
+                  "${'sunrise'.tr} ${DataCustomFormat.getCustomDateFormat(widget.data.currentWeatherModel.sunrise + widget.data.timeOffset)}",
+              secondColumnData:
+                  "${'sunset'.tr} ${DataCustomFormat.getCustomDateFormat(widget.data.currentWeatherModel.sunset + widget.data.timeOffset)}",
+            ),
           ),
           const Spacer(),
           BuildCurrentWeatherBoxRow(
@@ -49,9 +86,9 @@ class CurrentWeatherBox extends StatelessWidget {
           BuildCurrentWeatherBoxRow(
             style: CustomTypography.textStyleDetailedRowSubtitle,
             firstColumnData:
-                "${data.currentWeatherModel.feelTemperature.toStringAsFixed(0)} \u2103",
+                "${widget.data.currentWeatherModel.feelTemperature.toStringAsFixed(0)} \u2103",
             secondColumnData:
-                "${data.currentWeatherModel.humidity.toStringAsFixed(0)} %",
+                "${widget.data.currentWeatherModel.humidity.toStringAsFixed(0)} %",
           ),
           const Spacer(),
           BuildCurrentWeatherBoxRow(
@@ -62,9 +99,9 @@ class CurrentWeatherBox extends StatelessWidget {
           BuildCurrentWeatherBoxRow(
             style: CustomTypography.textStyleDetailedRowSubtitle,
             firstColumnData:
-                "${data.currentWeatherModel.uv.toStringAsFixed(0)}",
+                "${widget.data.currentWeatherModel.uv.toStringAsFixed(0)}",
             secondColumnData:
-                "${data.currentWeatherModel.pressure.toStringAsFixed(0)} hPa",
+                "${widget.data.currentWeatherModel.pressure.toStringAsFixed(0)} hPa",
           ),
           const Spacer(),
         ],
