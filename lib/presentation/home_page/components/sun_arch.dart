@@ -109,8 +109,8 @@ class Sun extends CustomPainter {
 
 
     Offset pointOnCircle = Offset(
-      (180 * math.sin(-degree)),
-      (180 * math.cos(-degree) + 180),
+      (180 * math.sin(4.2-degree)),
+      (180 * math.cos(4.2-degree) + 180),
     );
 
     // For showing the point moving on the circle

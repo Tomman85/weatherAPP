@@ -27,29 +27,30 @@ class _CurrentWeatherBoxState extends State<CurrentWeatherBox> {
   late Timer timer;
 
   double getDegree() {
-    if ((widget.data.currentWeatherModel.currentTime + widget.data.timeOffset) <
-        (widget.data.currentWeatherModel.sunrise + widget.data.timeOffset)) {
+    if ((widget.data.currentWeatherModel.currentTime ) <
+        (widget.data.currentWeatherModel.sunrise )) {
       return 0;
-    } else if ((widget.data.currentWeatherModel.currentTime +
-            widget.data.timeOffset) >
-        (widget.data.currentWeatherModel.sunset + widget.data.timeOffset)) {
+    } else if ((widget.data.currentWeatherModel.currentTime >
+        widget.data.currentWeatherModel.sunset)) {
       return 2;
     }
+
     double dailyHour = double.parse(DataCustomFormat.getHourDateFormat(
-        widget.data.currentWeatherModel.sunset -
-            widget.data.currentWeatherModel.sunrise));
+        (widget.data.currentWeatherModel.sunset -
+                widget.data.currentWeatherModel.sunrise) +
+            widget.data.timeOffset));
     double angle = (2 / dailyHour) *
         double.parse(DataCustomFormat.getHourDateFormat(
-            (widget.data.currentWeatherModel.currentTime +
-                    widget.data.timeOffset) -
-                widget.data.currentWeatherModel.sunrise));
+            ((widget.data.currentWeatherModel.currentTime -
+                    widget.data.currentWeatherModel.sunrise) +
+                widget.data.timeOffset)));
     return angle;
   }
-
 
   @override
   Widget build(BuildContext context) {
     double degree = getDegree();
+    print(degree);
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
@@ -63,8 +64,8 @@ class _CurrentWeatherBoxState extends State<CurrentWeatherBox> {
         children: [
           SunArch(
             lineDegree: degree,
-            sunDegree: degree + 2.15,
-            color: degree >= 2 ? Colors.grey.shade500 : Colors.yellow,
+            sunDegree:degree,
+            color: degree >= 2.1 ? Colors.grey.shade500 : Colors.yellow,
           ),
           const Spacer(),
           Padding(
