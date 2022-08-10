@@ -25,11 +25,6 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -38,11 +33,9 @@ class _SearchPageState extends State<SearchPage> {
         elevation: 0.0,
         backgroundColor: Colors.white,
         actions: [
-
           IconButton(
             onPressed: () {
               context.read<AuthBloc>().add(SignOutRequestEvent());
-              context.read<UserCubit>().initialUser();
             },
             icon: const Icon(Icons.logout),
           ),

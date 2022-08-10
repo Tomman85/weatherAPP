@@ -56,7 +56,6 @@ class _FavoritesCitiesState extends State<FavoritesCities> {
                           if (direction == DismissDirection.startToEnd) {
                             box.deleteAt(index);
                             setState(() {});
-
                             if (context.read<AuthBloc>().state.authStatus ==
                                 AuthStatus.authenticated) {
                               Authentication.updateData();
@@ -103,9 +102,11 @@ class _FavoritesCitiesState extends State<FavoritesCities> {
                                       width: 200,
                                       child: SingleChildScrollView(
                                         scrollDirection: Axis.horizontal,
-                                        child: Text(item.cityName.toString(),
-                                            style: CustomTypography
-                                                .textStyleFavCity),
+                                        child: Text(
+                                          item.cityName.toString(),
+                                          style:
+                                              CustomTypography.textStyleFavCity,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -128,7 +129,6 @@ class _FavoritesCitiesState extends State<FavoritesCities> {
                                     } else if (snapshot.hasError) {
                                       return Text('${snapshot.error}');
                                     }
-
                                     return const CircularProgressIndicator(
                                       color: Colors.white,
                                     );

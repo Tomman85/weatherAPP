@@ -5,15 +5,18 @@ import 'package:get/get.dart';
 
 class EmailFormField extends StatelessWidget {
   final TextEditingController editingController;
+
   const EmailFormField({
-    Key? key, required this.editingController,
+    Key? key,
+    required this.editingController,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 20),
-      child: TextFormField(controller: editingController,
+      child: TextFormField(
+        controller: editingController,
         validator: (val) {
           if (val!.isEmpty) {
             return 'emptyEmail'.tr;

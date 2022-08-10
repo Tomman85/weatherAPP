@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-
-
 import 'package:weather/utils/custom_typography.dart';
 import 'package:weather/utils/data_custom_format.dart';
 
@@ -34,14 +32,10 @@ class HorizontalWeatherList extends StatelessWidget {
             children: [
               //TODO zmienic 7200 na czas lokalny/offset lokalny
               // currentTime< itemTime
-                   Text(
-                      DataCustomFormat.getCustomDateFormat(itemTime),
-                      style: CustomTypography.textStyleHour,
-                    ),
-                  // : Text(
-                  //     'now'.tr,
-                  //     style: CustomTypography.textStyleHour,
-                  //   ),
+              Text(
+                DataCustomFormat.getCustomDateFormat(itemTime),
+                style: CustomTypography.textStyleHour,
+              ),
               const SizedBox(
                 height: 5,
               ),
@@ -65,7 +59,7 @@ class HorizontalWeatherList extends StatelessWidget {
                   ),
                   Text(
                     "${windConverter.toStringAsFixed(1)} km/h",
-                    style:  CustomTypography.textStyleWindSpeed,
+                    style: CustomTypography.textStyleWindSpeed,
                   ),
                 ],
               ),

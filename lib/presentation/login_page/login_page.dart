@@ -14,7 +14,7 @@ import 'package:weather/presentation/login_page/components/register_button.dart'
 import 'package:weather/utils/authentications.dart';
 import 'package:weather/utils/autocomplete_show_dialog.dart';
 import 'package:weather/utils/error_dialog.dart';
-import 'package:firebase_auth/firebase_auth.dart' as fbAuth;
+import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -36,7 +36,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final db = FirebaseFirestore.instance;
     Widget firstChild = BlocListener<SignInCubit, SignInState>(
       listener: (context, state) {
         if (state.signInStatus == SignInStatus.error) {
@@ -48,7 +47,8 @@ class _LoginPageState extends State<LoginPage> {
             child: TextButton(
               child: Text('Tak'),
               onPressed: () {
-                Authentication.updateDataWhenRegisterAndLogin();
+                Authentication.updateDataWhenRegisterAndLogin()
+                    .then((_) => Authentication.clearAndUpdate());
                 //This could be strange that u see 2x pop, but it helps me with the bug
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
@@ -76,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                     .SignIn(email: _email.text, password: _pass.text)
                     .then(
                       (_) => context.read<UserCubit>().getProfile(
-                          uid: fbAuth.FirebaseAuth.instance.currentUser?.uid),
+                          uid: fb_auth.FirebaseAuth.instance.currentUser?.uid),
                     );
           }
         },
@@ -108,10 +108,9 @@ class _LoginPageState extends State<LoginPage> {
         } else if (state.signUpStatus == SignUpStatus.success) {
           AutocompleteShowDialog.loginShowDialog(
             context: context,
-            contentText:
-                'Konto zostało utworzone. Dane zostaną synchronizowane',
+            contentText: 'accountRegistered'.tr,
             child: TextButton(
-              child: const Text('Ok'),
+              child: Text('ok'.tr),
               onPressed: () {
                 Authentication.updateDataWhenRegisterAndLogin();
                 Navigator.of(context).pop();
@@ -191,7 +190,7 @@ class _LoginPageState extends State<LoginPage> {
                                 cities: [],
                               )
                               .then((_) => context.read<UserCubit>().getProfile(
-                                  uid: fbAuth
+                                  uid: fb_auth
                                       .FirebaseAuth.instance.currentUser?.uid))
                               .then((_) => Authentication
                                   .updateDataWhenRegisterAndLogin());

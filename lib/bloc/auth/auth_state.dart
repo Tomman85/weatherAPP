@@ -1,10 +1,14 @@
 part of 'auth_bloc.dart';
 
-enum AuthStatus { unknown, authenticated, unauthenticated }
+enum AuthStatus {
+  unknown,
+  authenticated,
+  unauthenticated,
+}
 
 class AuthState {
   final AuthStatus authStatus;
-  final fbAuth.User? user;
+  final fb_auth.User? user;
 
   AuthState({
     required this.authStatus,
@@ -12,12 +16,14 @@ class AuthState {
   });
 
   factory AuthState.unknown() {
-    return AuthState(authStatus: AuthStatus.unknown);
+    return AuthState(
+      authStatus: AuthStatus.unknown,
+    );
   }
 
   AuthState copyWith({
     AuthStatus? authStatus,
-    fbAuth.User? user,
+    fb_auth.User? user,
   }) {
     return AuthState(
       authStatus: authStatus ?? this.authStatus,

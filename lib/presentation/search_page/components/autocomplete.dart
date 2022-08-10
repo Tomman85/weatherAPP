@@ -29,21 +29,10 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
   Position? _position;
   String? _currentAddress;
 
-  void _getAutocompletePredictions(name, lang) async {
-    isLoading = true;
-    setState(() {});
-    listDataResponse =
-    await AutocompleteRepositoryService.getAutocompletePrediction(
-        name, lang);
-    predictionModel = listDataResponse?.predictionModel;
-    isLoading = false;
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
+    Box box = Hive.box(favCity);
     bool checkAddress = false;
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(
@@ -61,7 +50,6 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
               if (predictionModel == null) {
                 return const Iterable<PredictionModel>.empty();
               }
-
               return predictionModel!.where((PredictionModel option) {
                 return option.formatted!
                     .toLowerCase()
@@ -93,18 +81,13 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
                       color: Colors.grey.shade900,
                       onPressed: () async {
                         _getCurrentLocation();
-
-                        Hive
-                            .box(favCity)
-                            .values
-                            .toList()
-                            .forEach((element) {
+                        box.values.toList().forEach((element) {
                           if (_currentAddress == element.cityName) {
                             checkAddress = true;
                           }
                         });
                         if (_currentAddress != null && !checkAddress) {
-                          Hive.box(favCity).add(
+                          box.add(
                             DataModel(
                               latitude: _position!.latitude.toString(),
                               longitude: _position!.longitude.toString(),
@@ -112,13 +95,9 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
                             ),
                           );
                         }
-                        if (context
-                            .read<AuthBloc>()
-                            .state
-                            .authStatus ==
+                        if (context.read<AuthBloc>().state.authStatus ==
                             AuthStatus.authenticated) {
                           Authentication.updateData();
-
                         }
                         setState(() {});
                       },
@@ -165,8 +144,7 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
                         return GestureDetector(
                           onTap: () {
                             onSelected(option);
-                            Hive
-                                .box(favCity)
+                            Hive.box(favCity)
                                 .values
                                 .toList()
                                 .forEach((element) {
@@ -185,10 +163,7 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
                               );
                               checkAddress = false;
                             }
-                            if (context
-                                .read<AuthBloc>()
-                                .state
-                                .authStatus ==
+                            if (context.read<AuthBloc>().state.authStatus ==
                                 AuthStatus.authenticated) {
                               Authentication.updateData();
                             }
@@ -196,22 +171,22 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
                           },
                           child: isLoading
                               ? const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Center(
-                              child: SizedBox(
-                                child: CircularProgressIndicator(
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ),
-                          )
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Center(
+                                    child: SizedBox(
+                                      child: CircularProgressIndicator(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                                )
                               : ListTile(
-                            title: Text(
-                              option.formatted.toString(),
-                              style: CustomTypography
-                                  .textStyleAutocompleteBasic,
-                            ),
-                          ),
+                                  title: Text(
+                                    option.formatted.toString(),
+                                    style: CustomTypography
+                                        .textStyleAutocompleteBasic,
+                                  ),
+                                ),
                         );
                       },
                     ),
@@ -223,6 +198,17 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
         ],
       ),
     );
+  }
+
+  void _getAutocompletePredictions(name, lang) async {
+    isLoading = true;
+    setState(() {});
+    listDataResponse =
+        await AutocompleteRepositoryService.getAutocompletePrediction(
+            name, lang);
+    predictionModel = listDataResponse?.predictionModel;
+    isLoading = false;
+    setState(() {});
   }
 
   void _getCurrentLocation() async {
@@ -265,8 +251,8 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
     }
 
     Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.best,
-        forceAndroidLocationManager: true)
+            desiredAccuracy: LocationAccuracy.best,
+            forceAndroidLocationManager: true)
         .then((Position position) {
       setState(() {
         _position = position;

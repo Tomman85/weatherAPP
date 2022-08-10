@@ -1,8 +1,8 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
-import 'package:firebase_auth/firebase_auth.dart' as fbAuth;
+import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
+import 'package:flutter/material.dart';
+import 'package:weather/cubit/user/user_cubit.dart';
 import 'package:weather/services/repository_services/firebase_repository/auth_repository.dart';
 
 part 'auth_event.dart';
@@ -14,7 +14,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository authRepository;
 
   AuthBloc({required this.authRepository}) : super(AuthState.unknown()) {
-    authSubscription = authRepository.user.listen((fbAuth.User? user) {
+    authSubscription = authRepository.user.listen((fb_auth.User? user) {
       add(AuthStateChangedEvent(user: user));
     });
     on<AuthStateChangedEvent>((event, emit) {
@@ -31,8 +31,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
 
     on<SignOutRequestEvent>((event, emit) async {
-
       await authRepository.signOut();
+      emit(
+        state.copyWith(authStatus: AuthStatus.unauthenticated, user: null),
+      );
     });
   }
 }

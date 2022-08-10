@@ -4,11 +4,9 @@ part of 'auth_bloc.dart';
 abstract class AuthEvent {}
 
 class AuthStateChangedEvent extends AuthEvent {
-  final fbAuth.User? user;
+  final fb_auth.User? user;
 
   AuthStateChangedEvent({this.user});
 }
 
-class SignOutRequestEvent extends AuthEvent{
-
-}
+class SignOutRequestEvent extends AuthEvent {}
