@@ -211,14 +211,11 @@ class _LoginPageState extends State<LoginPage> {
       child: TextButton(
         child: Text('Tak'),
         onPressed: () async {
-          //TODO FIX THIS BUG
-          await Authentication.updateDataWhenRegisterAndLogin().then((_) {
-            setState(() {
-              Hive.box(favCity).clear();
-            });
-            Authentication.clearAndUpdate();
-          });
-
+          Hive.box(favCity).isEmpty
+              ? Authentication.clearAndUpdate()
+              : await Authentication.updateDataWhenRegisterAndLogin().then((_) {
+                  Authentication.clearAndUpdate();
+                });
           Navigator.of(context).popUntil(
             ModalRoute.withName(searchPageRouteName),
           );

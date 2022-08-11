@@ -10,3 +10,5 @@ class AuthStateChangedEvent extends AuthEvent {
 }
 
 class SignOutRequestEvent extends AuthEvent {}
+
+class DeletionRequestedEvent extends AuthEvent{}

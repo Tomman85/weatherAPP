@@ -31,4 +31,9 @@ class ProfileRepository {
           plugin: 'flutter_error/server_error');
     }
   }
+
+  void deleteCurrentUserDatabase() {
+    usersRef.doc(fbAuth.FirebaseAuth.instance.currentUser?.uid).delete();
+  }
+
 }

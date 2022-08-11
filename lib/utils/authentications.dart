@@ -11,10 +11,10 @@ class Authentication {
 
   static Future<void> clearAndUpdate() async {
     await Hive.box(favCity).clear();
-    db
+   return db
         .collection('users')
         .doc(fbAuth.FirebaseAuth.instance.currentUser?.uid)
-        .get()
+        .get(GetOptions(source: Source.server))
         .then(
       (value) {
         List citiesFromFirebase = value.get('cities');
@@ -33,22 +33,22 @@ class Authentication {
   }
 
   static Future<void> updateDataWhenRegisterAndLogin() async {
-    final Map cityMap = {};
     final List cityList = [];
     Hive.box(favCity).values.toList().forEach((element) {
+      final Map cityMap = {};
+
       cityMap['cityName'] = element.cityName;
       cityMap['position'] = GeoPoint(
           double.parse(element.latitude), double.parse(element.longitude));
       cityList.add(cityMap);
-      db
-          .collection("users")
-          .doc(fbAuth.FirebaseAuth.instance.currentUser?.uid)
-          .update(
-        {'cities': FieldValue.arrayUnion(cityList)},
-      );
-      cityList.clear();
-      cityMap.clear();
+      // final c = FieldValue.arrayUnion(cityList);
     });
+    db
+        .collection("users")
+        .doc(fbAuth.FirebaseAuth.instance.currentUser?.uid)
+        .update(
+      {'cities': cityList},
+    );
   }
 
   static Future<void> updateData() async {

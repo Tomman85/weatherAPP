@@ -59,7 +59,7 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent>
         Box box = Hive.box(favCity);
 
         return FutureBuilder(
-          future: Hive.box(favCity).isEmpty
+          future: box.isEmpty
               ? null
               : _getWeatherData(
                   box.getAt(Hive.box(favCity).length - 1).latitude,
@@ -72,41 +72,48 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent>
             if (Hive.box(favCity).isEmpty) {
               child = Center(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 60.0),
+                  padding: const EdgeInsets.only(top: 20.0),
                   child: FractionallySizedBox(
                     widthFactor: 0.8,
                     heightFactor: 1,
-                    child: Column(
-                      children: [
-                        Lottie.asset(
-                          'lib/assets/lottie/93134-not-found.json',
-                          frameRate: FrameRate(120),
-                        ),
-                        Text(
-                          'Nie posiadasz żadnego miasta aby wyświetlić informacje pogodową. Aby dodać wybrane miasto kliknji przycisk poniżej',
-                          style: CustomTypography.textStyleAutocompleteBasic,
-                          textAlign: TextAlign.center,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 200),
-                          child: Align(
+                    child: Center(
+                      child: Column(
+                        children: [
+                          const Spacer(),
+                          Lottie.asset(
+                            'lib/assets/lottie/93134-not-found.json',
+                            frameRate: FrameRate(120),
+                          ),
+                          Text(
+                            'anyCity'.tr,
+                            style: const TextStyle(
+                                color: Colors.black, fontSize: 18),
+                            textAlign: TextAlign.center,
+                          ),
+                          Spacer(),
+                          Align(
                             alignment: Alignment.bottomRight,
                             child: FloatingActionButton(
-                                onPressed: () {
-                                  Navigator.of(context)
-                                      .pushNamed(searchPageRouteName);
-                                },
-                                child: Icon(Icons.add)),
+                              onPressed: () {
+                                Navigator.of(context)
+                                    .pushNamed(searchPageRouteName);
+                              },
+                              backgroundColor: Colors.black54,
+                              child: const Icon(
+                                Icons.add,
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
+                          const Spacer(),
+                          const Spacer(),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               );
             } else if (snapshot.hasData) {
               dynamic data = snapshot.data;
-
               child = Scaffold(
                 key: ValueKey(1),
                 extendBodyBehindAppBar: true,

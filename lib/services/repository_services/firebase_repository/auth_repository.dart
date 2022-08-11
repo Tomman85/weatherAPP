@@ -30,8 +30,7 @@ class AuthRepository {
       await usersRef.doc(signedInUser.uid).set({
         'name': name,
         'email': email,
-        'cities':[],
-
+        'cities': [],
       });
     } on fbAuth.FirebaseAuthException catch (e) {
       throw CustomError(
@@ -70,8 +69,11 @@ class AuthRepository {
     }
   }
 
-
-  Future <void> signOut()async{
+  Future<void> signOut() async {
     await firebaseAuth.signOut();
+  }
+
+  Future<void> deleteCurrentUser() async {
+    await fbAuth.FirebaseAuth.instance.currentUser!.delete();
   }
 }

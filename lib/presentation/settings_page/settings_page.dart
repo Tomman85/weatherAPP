@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:weather/bloc/auth/auth_bloc.dart';
+import 'package:weather/cubit/user/user_cubit.dart';
 import 'package:weather/presentation/settings_page/components/build_settings_page_row.dart';
+import 'package:weather/services/repository_services/firebase_repository/profile_repository.dart';
 import 'package:weather/utils/change_language.dart';
 import 'package:weather/utils/custom_typography.dart';
 import 'package:weather/utils/data_custom_format.dart';
@@ -72,7 +76,12 @@ class _SettingsPageState extends State<SettingsPage> {
             firstStyle: CustomTypography.textStyleAutocompleteBasic,
             secondStyle: CustomTypography.textStyleSettingsSubtitle,
             firstColumnData: 'deleteAccount'.tr,
-            secondColumnData:  Text('todo')
+            secondColumnData: IconButton(
+              icon: Icon(Icons.delete),
+              onPressed: () {
+                _showDialog();
+              },
+            ),
           ),
         ],
       ),
@@ -83,4 +92,34 @@ class _SettingsPageState extends State<SettingsPage> {
         value: item,
         child: Text(item),
       );
+
+  _showDialog() {
+    return showDialog(
+      context: context,
+      builder: ((context) => AlertDialog(
+            title: Text('delete_account'.tr),
+            content: Text('do_you_really_want_to_delete'.tr),
+            actions: [
+              TextButton(
+                child: const Text(
+                  'OK',
+                  style: TextStyle(color: Colors.red),
+                ),
+                onPressed: () {
+                  context.read<ProfileRepository>().deleteCurrentUserDatabase();
+                  context.read<AuthBloc>().add(DeletionRequestedEvent());
+                  context.read<UserCubit>().initialUser();
+                  Navigator.pop(context);
+                },
+              ),
+              TextButton(
+                child: Text('cancel'.tr),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          )),
+    );
+  }
 }
