@@ -9,7 +9,8 @@ import 'package:weather/models/hive_box_models/model_list_of_cities.dart';
 class Authentication {
   static FirebaseFirestore db = FirebaseFirestore.instance;
 
-  static clearAndUpdate() {
+  static Future<void> clearAndUpdate() async {
+    await Hive.box(favCity).clear();
     db
         .collection('users')
         .doc(fbAuth.FirebaseAuth.instance.currentUser?.uid)

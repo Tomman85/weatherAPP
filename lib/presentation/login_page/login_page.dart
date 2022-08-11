@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_field_validator/form_field_validator.dart';
@@ -6,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
 import 'package:weather/const/hive_box_names.dart';
+import 'package:weather/const/page_name_routes.dart';
 import 'package:weather/cubit/sign_in/sign_in_cubit.dart';
 import 'package:weather/cubit/sign_up/sign_up_cubit.dart';
 import 'package:weather/cubit/user/user_cubit.dart';
@@ -38,94 +38,27 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget firstChild = BlocListener<SignInCubit, SignInState>(
-      listener: (context, state) {
-        if (state.signInStatus == SignInStatus.error) {
-          errorDialog(context, state.error);
-        } else if (state.signInStatus == SignInStatus.success) {
-          AutocompleteShowDialog.loginShowDialog(
-            context: context,
-            contentText: 'Czy chcesz schynchronizować bieżące miasta?',
-            child: TextButton(
-              child: Text('Tak'),
-              onPressed: () {
-                Authentication.updateDataWhenRegisterAndLogin().then((_) =>
-                    Hive.box(favCity)
-                        .clear()
-                        .then((_) => Authentication.clearAndUpdate()));
-
-                //This could be strange that u see 2x pop, but it helps me with the bug
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-              },
-            ),
-            secondChild: TextButton(
-              child: Text('Nie'),
-              onPressed: () {
-                Authentication.clearAndUpdate();
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-              },
-            ),
-          );
-        }
-      },
-      child: LoginButton(
-        pointToOnPress: () {
-          if (formKey.currentState!.validate()) {
-            context.read<SignInCubit>().state.signInStatus ==
-                    SignInStatus.submitting
-                ? null
-                : context
-                    .read<SignInCubit>()
-                    .SignIn(email: _email.text, password: _pass.text)
-                    .then(
-                      (_) => context.read<UserCubit>().getProfile(
-                          uid: fb_auth.FirebaseAuth.instance.currentUser?.uid),
-                    );
-          }
-        },
-      ),
-    );
-
-    Widget? secondChild = PasswordFormField(
-      validator: (val) => MatchValidator(errorText: 'matchPassword'.tr)
-          .validateMatch(val, _pass.text),
-      isVisibility: isVisibility,
-      labelText: 'passwordRepeat'.tr,
-      pointToOnPress: () {
-        isVisibility = !isVisibility;
-        setState(() {});
-      },
-      textEditingController: _confirmPass,
-    );
-
-    if (!wantRegister) {
-      child = firstChild;
-    } else {
-      child = secondChild;
-    }
-
-    return BlocListener<SignUpCubit, SignUpState>(
-      listener: (context, state) {
-        if (state.signUpStatus == SignUpStatus.error) {
-          errorDialog(context, state.error);
-        } else if (state.signUpStatus == SignUpStatus.success) {
-          AutocompleteShowDialog.loginShowDialog(
-            context: context,
-            contentText: 'accountRegistered'.tr,
-            child: TextButton(
-              child: Text('ok'.tr),
-              onPressed: () {
-                Authentication.updateDataWhenRegisterAndLogin();
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-              },
-            ),
-            secondChild: Container(),
-          );
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<SignUpCubit, SignUpState>(
+          listener: (context, state) {
+            if (state.signUpStatus == SignUpStatus.error) {
+              errorDialog(context, state.error);
+            } else if (state.signUpStatus == SignUpStatus.success) {
+              _buildSignUpDialog();
+            }
+          },
+        ),
+        BlocListener<SignInCubit, SignInState>(
+          listener: (context, state) {
+            if (state.signInStatus == SignInStatus.error) {
+              errorDialog(context, state.error);
+            } else if (state.signInStatus == SignInStatus.success) {
+              _buildSignInDialog();
+            }
+          },
+        ),
+      ],
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -159,7 +92,8 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 300),
-                  child: child,
+                  child:
+                      !wantRegister ? _buildFirstChild() : _buildSecondChild(),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 5),
@@ -181,58 +115,146 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 RegisterButton(
                   onPressed: () {
-                    if (wantRegister == true) {
-                      if (formKey.currentState!.validate()) {
-                        if (context.read<SignUpCubit>().state.signUpStatus ==
-                            SignUpStatus.submitting) {
-                          null;
-                        } else {
-                          context
-                              .read<SignUpCubit>()
-                              .signUp(
-                                email: _email.text,
-                                password: _pass.text,
-                                cities: [],
-                              )
-                              .then((_) => context.read<UserCubit>().getProfile(
-                                  uid: fb_auth
-                                      .FirebaseAuth.instance.currentUser?.uid))
-                              .then((_) => Authentication
-                                  .updateDataWhenRegisterAndLogin());
-                        }
-                      }
-                    }
+                    _signUpUser();
                     wantRegister = true;
                     setState(() {});
                   },
                 ),
-                wantRegister
-                    ? Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: GestureDetector(
-                          onTap: () {
-                            wantRegister = false;
-                            setState(() {});
-                          },
-                          child:
-                              context.read<SignUpCubit>().state.signUpStatus ==
-                                      SignUpStatus.submitting
-                                  ? Container()
-                                  : Center(
-                                      child: Text(
-                                        'wannaLogin'.tr,
-                                        style: const TextStyle(
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ),
-                        ),
-                      )
-                    : Container(),
+                wantRegister ? _changeLoginToRegister() : Container(),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  _buildFirstChild() {
+    return LoginButton(
+      pointToOnPress: () {
+        _signInUser();
+      },
+    );
+  }
+
+  _buildSecondChild() {
+    return PasswordFormField(
+      validator: (val) => MatchValidator(errorText: 'matchPassword'.tr)
+          .validateMatch(val, _pass.text),
+      isVisibility: isVisibility,
+      labelText: 'passwordRepeat'.tr,
+      pointToOnPress: () {
+        isVisibility = !isVisibility;
+        setState(() {});
+      },
+      textEditingController: _confirmPass,
+    );
+  }
+
+  _buildSignUpDialog() {
+    return AutocompleteShowDialog.loginShowDialog(
+      context: context,
+      contentText: 'accountRegistered'.tr,
+      child: TextButton(
+        child: Text('ok'.tr),
+        onPressed: () {
+          Authentication.updateDataWhenRegisterAndLogin();
+          Navigator.of(context).popUntil(
+            ModalRoute.withName(searchPageRouteName),
+          );
+        },
+      ),
+      secondChild: Container(),
+    );
+  }
+
+  _signInUser() {
+    if (formKey.currentState!.validate()) {
+      context.read<SignInCubit>().state.signInStatus == SignInStatus.submitting
+          ? null
+          : context
+              .read<SignInCubit>()
+              .SignIn(email: _email.text, password: _pass.text)
+              .then(
+                (_) => context.read<UserCubit>().getProfile(
+                    uid: fb_auth.FirebaseAuth.instance.currentUser?.uid),
+              );
+    }
+  }
+
+  _signUpUser() {
+    if (wantRegister == true) {
+      if (formKey.currentState!.validate()) {
+        if (context.read<SignUpCubit>().state.signUpStatus ==
+            SignUpStatus.submitting) {
+          null;
+        } else {
+          context
+              .read<SignUpCubit>()
+              .signUp(
+                email: _email.text,
+                password: _pass.text,
+                cities: [],
+              )
+              .then((_) => context.read<UserCubit>().getProfile(
+                  uid: fb_auth.FirebaseAuth.instance.currentUser?.uid))
+              .then((_) => Authentication.updateDataWhenRegisterAndLogin());
+        }
+      }
+    }
+  }
+
+  _buildSignInDialog() {
+    return AutocompleteShowDialog.loginShowDialog(
+      context: context,
+      contentText: 'Czy chcesz schynchronizować bieżące miasta?',
+      child: TextButton(
+        child: Text('Tak'),
+        onPressed: () async {
+          //TODO FIX THIS BUG
+          await Authentication.updateDataWhenRegisterAndLogin().then((_) {
+            setState(() {
+              Hive.box(favCity).clear();
+            });
+            Authentication.clearAndUpdate();
+          });
+
+          Navigator.of(context).popUntil(
+            ModalRoute.withName(searchPageRouteName),
+          );
+        },
+      ),
+      secondChild: TextButton(
+        child: Text('Nie'),
+        onPressed: () {
+          Authentication.clearAndUpdate();
+          Navigator.of(context).popUntil(
+            ModalRoute.withName(searchPageRouteName),
+          );
+        },
+      ),
+    );
+  }
+
+  _changeLoginToRegister() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: GestureDetector(
+        onTap: () {
+          wantRegister = false;
+          setState(() {});
+        },
+        child: context.read<SignUpCubit>().state.signUpStatus ==
+                SignUpStatus.submitting
+            ? Container()
+            : Center(
+                child: Text(
+                  'wannaLogin'.tr,
+                  style: const TextStyle(
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
       ),
     );
   }

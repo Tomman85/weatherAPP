@@ -47,8 +47,9 @@ class LocaleString extends Translations {
           'login': 'Login',
           'accountRegistered':
               'The account has been created. The data will be synchronized',
-          'deleteData':'Are You sure to delete all data?',
-
+          'deleteData': 'Are You sure to delete all data?',
+          'accountDelete': 'Account managment',
+          'deleteAccount': 'Delete account',
         },
         'pl_PL': {
           'sunrise': 'Wschód słońca',
@@ -95,7 +96,9 @@ class LocaleString extends Translations {
           'login': 'Zaloguj się',
           'accountRegistered':
               'Konto zostało utworzone. Dane zostaną synchronizowane',
-        'deleteData':'Czy chcesz usunąć wszystkie dane dotyczące miast?',
+          'deleteData': 'Czy chcesz usunąć wszystkie dane dotyczące miast?',
+          'accountDelete': 'Zarządzanie kontem',
+          'deleteAccount': 'Usuń konto',
         }
       };
 }

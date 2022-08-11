@@ -6,7 +6,6 @@ import 'package:weather/utils/custom_typography.dart';
 import 'package:weather/utils/data_custom_format.dart';
 
 class SettingsPage extends StatefulWidget {
-
   const SettingsPage({Key? key}) : super(key: key);
 
   @override
@@ -61,6 +60,19 @@ class _SettingsPageState extends State<SettingsPage> {
                 LanguageFormat.changeLanguage();
               },
             ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 20, left: 20),
+            child: Text(
+              'accountDelete'.tr,
+              style: CustomTypography.textStyleSettingsSubtitle,
+            ),
+          ),
+          BuildSettingsPageRow(
+            firstStyle: CustomTypography.textStyleAutocompleteBasic,
+            secondStyle: CustomTypography.textStyleSettingsSubtitle,
+            firstColumnData: 'deleteAccount'.tr,
+            secondColumnData:  Text('todo')
           ),
         ],
       ),
