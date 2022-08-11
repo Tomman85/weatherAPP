@@ -7,11 +7,9 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:weather/models/hive_box_models/model_list_of_cities.dart';
 import 'package:weather/models/openweather_model/weather_data_response.dart';
 import 'package:weather/presentation/search_page/components/delete_autocomplete_background.dart';
-import 'package:weather/services/repository_services/firebase_repository/profile_repository.dart';
 import 'package:weather/services/repository_services/openweather_repository_service/openweather_repository_service.dart';
 import 'package:weather/utils/authentications.dart';
 import 'package:weather/utils/custom_typography.dart';
-import 'package:firebase_auth/firebase_auth.dart' as fbAuth;
 
 class FavoritesCities extends StatefulWidget {
   const FavoritesCities({Key? key}) : super(key: key);
@@ -36,138 +34,139 @@ class _FavoritesCitiesState extends State<FavoritesCities> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-        valueListenable: Hive.box(favCity).listenable(),
-        builder: (context, value, _) {
-          var box = Hive.box(favCity);
-          final citiesList = box.values.toList();
-          return Container(
-            padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 10),
-            height: 600,
-            child: box.isEmpty
-                ? const Text('Task na next week')
-                : ListView.builder(
-                    itemCount: box.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final item = citiesList[index];
-                      return Dismissible(
-                        key: UniqueKey(),
-                        direction: DismissDirection.startToEnd,
-                        onDismissed: (direction) {
-                          if (direction == DismissDirection.startToEnd) {
-                            box.deleteAt(index);
-                            setState(() {});
-                            if (context.read<AuthBloc>().state.authStatus ==
-                                AuthStatus.authenticated) {
-                              Authentication.updateData();
-                            }
-                          }
+      valueListenable: Hive.box(favCity).listenable(),
+      builder: (context, value, _) {
+        var box = Hive.box(favCity);
+        final citiesList = box.values.toList();
+        return Container(
+          padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 10),
+          height: 600,
+          child: box.isEmpty
+              ? const Text('Task na next week')
+              : ListView.builder(
+                  itemCount: box.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final item = citiesList[index];
+                    return Dismissible(
+                      key: UniqueKey(),
+                      direction: DismissDirection.startToEnd,
+                      onDismissed: (direction) {
+                        if (direction == DismissDirection.startToEnd) {
+                          box.deleteAt(index);
                           setState(() {});
-                        },
-                        confirmDismiss: (DismissDirection direction) async {
-                          return await buildShowDialog(context);
-                        },
-                        background: const DeleteAutocompleteBackground(),
-                        child: GestureDetector(
-                          onTap: () {
-                            box.deleteAt(index);
-                            box.add(
-                              DataModel(
-                                latitude: item.latitude,
-                                longitude: item.longitude,
-                                cityName: item.cityName,
-                              ),
-                            );
-                            setState(() {});
-                            Navigator.of(context).pop();
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.only(
-                              top: 15,
+                          if (context.read<AuthBloc>().state.authStatus ==
+                              AuthStatus.authenticated) {
+                            Authentication.updateData();
+                          }
+                        }
+                        setState(() {});
+                      },
+                      confirmDismiss: (DismissDirection direction) async {
+                        return await buildShowDialog(context);
+                      },
+                      background: const DeleteAutocompleteBackground(),
+                      child: GestureDetector(
+                        onTap: () {
+                          box.deleteAt(index);
+                          box.add(
+                            DataModel(
+                              latitude: item.latitude,
+                              longitude: item.longitude,
+                              cityName: item.cityName,
                             ),
-                            padding: const EdgeInsets.only(left: 20, right: 20),
-                            decoration: BoxDecoration(
-                              color: Colors.lightBlue.shade800,
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                color: Colors.grey.shade300,
-                              ),
+                          );
+                          setState(() {});
+                          Navigator.of(context).pop();
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(
+                            top: 15,
+                          ),
+                          padding: const EdgeInsets.only(left: 20, right: 20),
+                          decoration: BoxDecoration(
+                            color: Colors.lightBlue.shade800,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: Colors.grey.shade300,
                             ),
-                            height: 110,
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: SizedBox(
-                                      width: 200,
-                                      child: SingleChildScrollView(
-                                        scrollDirection: Axis.horizontal,
-                                        child: Text(
-                                          item.cityName.toString(),
-                                          style:
-                                              CustomTypography.textStyleFavCity,
-                                        ),
+                          ),
+                          height: 110,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: SizedBox(
+                                    width: 200,
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Text(
+                                        item.cityName.toString(),
+                                        style:
+                                            CustomTypography.textStyleFavCity,
                                       ),
                                     ),
                                   ),
                                 ),
-                                FutureBuilder(
-                                  future: _getCurrentWeatherData(
-                                    item.latitude.toString(),
-                                    item.longitude.toString(),
-                                    "pl",
-                                  ),
-                                  builder: (context, AsyncSnapshot snapshot) {
-                                    if (snapshot.hasData) {
-                                      return Center(
-                                        child: Text(
-                                          "${snapshot.data.currentWeatherModel.temperature.toStringAsFixed(0)} \u00B0",
-                                          style:
-                                              CustomTypography.textStyleFavTemp,
-                                        ),
-                                      );
-                                    } else if (snapshot.hasError) {
-                                      return Text('${snapshot.error}');
-                                    }
-                                    return const CircularProgressIndicator(
-                                      color: Colors.white,
-                                    );
-                                  },
+                              ),
+                              FutureBuilder(
+                                future: _getCurrentWeatherData(
+                                  item.latitude.toString(),
+                                  item.longitude.toString(),
+                                  "pl",
                                 ),
-                              ],
-                            ),
+                                builder: (context, AsyncSnapshot snapshot) {
+                                  if (snapshot.hasData) {
+                                    return Center(
+                                      child: Text(
+                                        "${snapshot.data.currentWeatherModel.temperature.toStringAsFixed(0)} \u00B0",
+                                        style:
+                                            CustomTypography.textStyleFavTemp,
+                                      ),
+                                    );
+                                  } else if (snapshot.hasError) {
+                                    return Text('${snapshot.error}');
+                                  }
+                                  return const CircularProgressIndicator(
+                                    color: Colors.white,
+                                  );
+                                },
+                              ),
+                            ],
                           ),
                         ),
-                      );
-                    },
-                  ),
-          );
-        });
-  }
-
-  Future<bool?> buildShowDialog(BuildContext context) {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("confirmDelete".tr),
-          content: Text('areYouSure'.tr),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text(
-                "deleteCity".tr,
-              ),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: Text(
-                "cancelDelete".tr,
-              ),
-            ),
-          ],
+                      ),
+                    );
+                  },
+                ),
         );
       },
     );
   }
+}
+
+Future<bool?> buildShowDialog(BuildContext context) {
+  return showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("confirmDelete".tr),
+        content: Text('areYouSure'.tr),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(
+              "deleteCity".tr,
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(
+              "cancelDelete".tr,
+            ),
+          ),
+        ],
+      );
+    },
+  );
 }

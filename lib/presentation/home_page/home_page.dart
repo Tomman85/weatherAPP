@@ -20,7 +20,8 @@ class HomePage extends StatefulWidget {
 }
 
 String splitBox(Box box) {
-  String boxToString = box.getAt(box.length - 1).cityName.toString();
+  String boxToString =
+      box.isEmpty ? '' : box.getAt(box.length - 1).cityName.toString();
   return boxToString.split(',')[0];
 }
 
@@ -39,65 +40,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed(settingsPageRouteName);
-            },
-            icon: const DecoratedIcon(
-              decoration: IconDecoration(
-                border: IconBorder(
-                  color: Colors.black26,
-                  width: 5,
-                ),
-              ),
-              icon: Icon(
-                Icons.settings,
-              ),
-            ),
-          ),
-        ],
-        title: ValueListenableBuilder(
-          valueListenable: Hive.box(favCity).listenable(),
-          builder: (BuildContext context, value, Widget? child) {
-            Box box = Hive.box(favCity);
-            return box.isEmpty
-                ? Text(
-                    'brak',style: TextStyle(color: Colors.blue),
-                  )
-                : BorderTextStyle(
-                    child: Text(
-                      splitBox(box),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 30,
-                      ),
-                    ),
-                  );
-          },
-        ),
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.of(context).pushNamed(
-              searchPageRouteName,
-            );
-          },
-          child: const DecoratedIcon(
-            icon: Icon(Icons.add_circle_outlined),
-            decoration: IconDecoration(
-              border: IconBorder(
-                color: Colors.black26,
-                width: 5,
-              ),
-            ),
-          ),
-        ),
-      ),
-      body: const MainPageWeatherContent(),
+      body:  const MainPageWeatherContent(),
     );
   }
 }
