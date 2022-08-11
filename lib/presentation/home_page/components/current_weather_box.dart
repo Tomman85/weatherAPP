@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:countup/countup.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:weather/presentation/home_page/components/build_current_weather_box_row.dart';
