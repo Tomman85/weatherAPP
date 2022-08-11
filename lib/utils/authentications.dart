@@ -10,7 +10,6 @@ class Authentication {
   static FirebaseFirestore db = FirebaseFirestore.instance;
 
   static clearAndUpdate() {
-    Hive.box(favCity).clear();
     db
         .collection('users')
         .doc(fbAuth.FirebaseAuth.instance.currentUser?.uid)

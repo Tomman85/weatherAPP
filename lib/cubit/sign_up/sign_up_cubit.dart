@@ -10,7 +10,7 @@ class SignUpCubit extends Cubit<SignUpState> {
 
   SignUpCubit({required this.authRepository}) : super(SignUpState.initial());
 
-  Future<void> SignUp({
+  Future<void> signUp({
     required String email,
     required String password,
     required List cities,

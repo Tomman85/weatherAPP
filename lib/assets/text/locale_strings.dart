@@ -47,6 +47,8 @@ class LocaleString extends Translations {
           'login': 'Login',
           'accountRegistered':
               'The account has been created. The data will be synchronized',
+          'deleteData':'Are You sure to delete all data?',
+
         },
         'pl_PL': {
           'sunrise': 'Wschód słońca',
@@ -93,6 +95,7 @@ class LocaleString extends Translations {
           'login': 'Zaloguj się',
           'accountRegistered':
               'Konto zostało utworzone. Dane zostaną synchronizowane',
+        'deleteData':'Czy chcesz usunąć wszystkie dane dotyczące miast?',
         }
       };
 }

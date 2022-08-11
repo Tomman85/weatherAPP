@@ -13,6 +13,7 @@ import 'package:weather/presentation/search_page/components/autocomplete.dart';
 import 'package:weather/presentation/search_page/components/favorites_cities.dart';
 import 'package:weather/services/repository_services/firebase_repository/profile_repository.dart';
 import 'package:weather/utils/authentications.dart';
+import 'package:weather/utils/autocomplete_show_dialog.dart';
 import 'package:weather/utils/custom_typography.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fbAuth;
 
@@ -33,16 +34,50 @@ class _SearchPageState extends State<SearchPage> {
         elevation: 0.0,
         backgroundColor: Colors.white,
         actions: [
-          IconButton(
-            onPressed: () {
-              context.read<AuthBloc>().add(SignOutRequestEvent());
-            },
-            icon: const Icon(Icons.logout),
-          ),
+          context.watch<AuthBloc>().state.authStatus != AuthStatus.authenticated
+              ? Container()
+              : IconButton(
+                  onPressed: () {
+                    AutocompleteShowDialog.loginShowDialog(
+                      context: context,
+                      contentText: 'logout'.tr,
+                      child: TextButton(
+                        onPressed: () {
+                          context.read<AuthBloc>().add(SignOutRequestEvent());
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('yes'.tr),
+                      ),
+                      secondChild: TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('cancelDelete'.tr),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.logout),
+                ),
           IconButton(
               onPressed: () {
-                Hive.box(favCity).clear();
-                Authentication.clearAllData();
+                AutocompleteShowDialog.loginShowDialog(
+                  context: context,
+                  contentText: 'deleteData'.tr,
+                  child: TextButton(
+                    onPressed: () {
+                      Hive.box(favCity).clear();
+                      Authentication.clearAllData();
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('deleteCity'.tr),
+                  ),
+                  secondChild: TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('cancelDelete'.tr),
+                  ),
+                );
               },
               icon: const Icon(Icons.delete)),
         ],
@@ -63,26 +98,28 @@ class _SearchPageState extends State<SearchPage> {
               ),
         centerTitle: true,
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Text(
-              'cityManagement'.tr,
-              textAlign: TextAlign.end,
-              style: CustomTypography.textStyleSettingsTitle,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(
+              height: 20,
             ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          const AutocompletePredictions(),
-          const FavoritesCities(),
-        ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                'cityManagement'.tr,
+                textAlign: TextAlign.end,
+                style: CustomTypography.textStyleSettingsTitle,
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            const AutocompletePredictions(),
+            const FavoritesCities(),
+          ],
+        ),
       ),
     );
   }

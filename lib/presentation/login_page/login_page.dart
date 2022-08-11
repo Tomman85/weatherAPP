@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
+import 'package:weather/const/hive_box_names.dart';
 import 'package:weather/cubit/sign_in/sign_in_cubit.dart';
 import 'package:weather/cubit/sign_up/sign_up_cubit.dart';
 import 'package:weather/cubit/user/user_cubit.dart';
@@ -47,8 +49,11 @@ class _LoginPageState extends State<LoginPage> {
             child: TextButton(
               child: Text('Tak'),
               onPressed: () {
-                Authentication.updateDataWhenRegisterAndLogin()
-                    .then((_) => Authentication.clearAndUpdate());
+                Authentication.updateDataWhenRegisterAndLogin().then((_) =>
+                    Hive.box(favCity)
+                        .clear()
+                        .then((_) => Authentication.clearAndUpdate()));
+
                 //This could be strange that u see 2x pop, but it helps me with the bug
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
@@ -184,7 +189,7 @@ class _LoginPageState extends State<LoginPage> {
                         } else {
                           context
                               .read<SignUpCubit>()
-                              .SignUp(
+                              .signUp(
                                 email: _email.text,
                                 password: _pass.text,
                                 cities: [],
