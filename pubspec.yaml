@@ -53,7 +53,11 @@ dependencies:
   bordered_text: ^2.0.0
   icon_decoration: ^1.0.1
   firebase_core: ^1.20.0
-
+  firebase_auth: ^3.6.2
+  cloud_firestore: ^3.4.3
+  flutter_bloc: ^8.0.1
+  bloc: ^8.0.3
+  equatable: ^2.0.3
 
 
 dev_dependencies:

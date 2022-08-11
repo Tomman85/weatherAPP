@@ -41,8 +41,15 @@ class LocaleString extends Translations {
           'emptyEmail': 'Email is required',
           'emptyPassword': 'Password is required',
           'shortPassword': 'Password must be at least 8 digits long',
-          'specialPassword':'Passwords must have at least one special character',
-          'matchPassword':'Passwords do not match',
+          'specialPassword':
+              'Passwords must have at least one special character',
+          'matchPassword': 'Passwords do not match',
+          'login': 'Login',
+          'accountRegistered':
+              'The account has been created. The data will be synchronized',
+          'deleteData': 'Are You sure to delete all data?',
+          'accountDelete': 'Account managment',
+          'deleteAccount': 'Delete account',
         },
         'pl_PL': {
           'sunrise': 'Wschód słońca',
@@ -83,9 +90,15 @@ class LocaleString extends Translations {
           'emptyEmail': 'Email jest wymagany',
           'emptyPassword': 'Hasło jest wymagane',
           'shortPassword': 'Hasło musi zawierać co najmniej 8 znaków',
-          'specialPassword':'Hasło musi zawierać co najmniej jeden specjalny znak',
-          'matchPassword':'Hasła nie pasują do siebie',
-
+          'specialPassword':
+              'Hasło musi zawierać co najmniej jeden specjalny znak',
+          'matchPassword': 'Hasła nie pasują do siebie',
+          'login': 'Zaloguj się',
+          'accountRegistered':
+              'Konto zostało utworzone. Dane zostaną synchronizowane',
+          'deleteData': 'Czy chcesz usunąć wszystkie dane dotyczące miast?',
+          'accountDelete': 'Zarządzanie kontem',
+          'deleteAccount': 'Usuń konto',
         }
       };
 }

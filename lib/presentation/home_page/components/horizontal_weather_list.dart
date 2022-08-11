@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:icon_decoration/icon_decoration.dart';
-import 'package:intl/intl.dart';
 import 'package:weather/reusable_widgets/border_text_style.dart';
+
 import 'package:weather/utils/custom_typography.dart';
 import 'package:weather/utils/data_custom_format.dart';
 
 class HorizontalWeatherList extends StatelessWidget {
   final dynamic data;
 
-
   const HorizontalWeatherList({
     Key? key,
     required this.data,
-
   }) : super(key: key);
 
   @override
@@ -29,8 +26,8 @@ class HorizontalWeatherList extends StatelessWidget {
         String itemIcon =
             data.hourlyWeatherModel[index].weatherDescription[0].icon;
         double windConverter =
-        ((data.hourlyWeatherModel[index].windSpeed * 1 / 1000) /
-            (1 / 3600));
+            ((data.hourlyWeatherModel[index].windSpeed * 1 / 1000) /
+                (1 / 3600));
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           child: Column(
@@ -70,7 +67,6 @@ class HorizontalWeatherList extends StatelessWidget {
                       decoration: IconDecoration(
                         border: IconBorder(
                           color: Colors.black,
-                          
                         ),
                       ),
                     ),

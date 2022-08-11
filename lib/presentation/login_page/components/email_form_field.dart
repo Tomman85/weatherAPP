@@ -3,8 +3,11 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:get/get.dart';
 
 class EmailFormField extends StatelessWidget {
+  final TextEditingController editingController;
+
   const EmailFormField({
     Key? key,
+    required this.editingController,
   }) : super(key: key);
 
   @override
@@ -13,6 +16,7 @@ class EmailFormField extends StatelessWidget {
       padding: const EdgeInsets.only(top: 20),
       child: TextFormField(
         keyboardType: TextInputType.emailAddress,
+        controller: editingController,
         validator: (val) {
           if (val!.isEmpty) {
             return 'emptyEmail'.tr;
