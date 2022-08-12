@@ -30,7 +30,7 @@ class _CurrentWeatherBoxState extends State<CurrentWeatherBox> {
       return 0;
     } else if ((widget.data.currentWeatherModel.currentTime >
         widget.data.currentWeatherModel.sunset)) {
-      return 2;
+      return 2.05;
     }
 
     double dailyHour = double.parse(DataCustomFormat.getHourDateFormat(
@@ -63,7 +63,7 @@ class _CurrentWeatherBoxState extends State<CurrentWeatherBox> {
           SunArch(
             lineDegree: degree,
             sunDegree:degree,
-            color: degree >= 2.1 ? Colors.grey.shade500 : Colors.yellow,
+            color: degree >= 2.05 ? Colors.grey.shade500 : Colors.yellow,
           ),
           const Spacer(),
           Padding(

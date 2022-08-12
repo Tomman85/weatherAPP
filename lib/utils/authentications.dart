@@ -11,7 +11,7 @@ class Authentication {
 
   static Future<void> clearAndUpdate() async {
     await Hive.box(favCity).clear();
-   return db
+    return db
         .collection('users')
         .doc(fbAuth.FirebaseAuth.instance.currentUser?.uid)
         .get(GetOptions(source: Source.server))
@@ -34,6 +34,7 @@ class Authentication {
 
   static Future<void> updateDataWhenRegisterAndLogin() async {
     final List cityList = [];
+
     Hive.box(favCity).values.toList().forEach((element) {
       final Map cityMap = {};
 
@@ -41,14 +42,15 @@ class Authentication {
       cityMap['position'] = GeoPoint(
           double.parse(element.latitude), double.parse(element.longitude));
       cityList.add(cityMap);
-      // final c = FieldValue.arrayUnion(cityList);
+      // final c = ;
     });
+
     db
         .collection("users")
         .doc(fbAuth.FirebaseAuth.instance.currentUser?.uid)
-        .update(
-      {'cities': cityList},
-    );
+        .set({
+      'cities': cityList
+    }, SetOptions(merge: true));
   }
 
   static Future<void> updateData() async {

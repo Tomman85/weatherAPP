@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_field_validator/form_field_validator.dart';
@@ -13,10 +16,13 @@ import 'package:weather/presentation/login_page/components/email_form_field.dart
 import 'package:weather/presentation/login_page/components/login_button.dart';
 import 'package:weather/presentation/login_page/components/password_form_field.dart';
 import 'package:weather/presentation/login_page/components/register_button.dart';
+import 'package:weather/services/repository_services/firebase_repository/auth_repository.dart';
 import 'package:weather/utils/authentications.dart';
 import 'package:weather/utils/autocomplete_show_dialog.dart';
 import 'package:weather/utils/error_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
+
+import 'components/reset_email_form_field.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -32,9 +38,17 @@ class _LoginPageState extends State<LoginPage> {
   String? password;
 
   final formKey = GlobalKey<FormState>();
+  final secformKey = GlobalKey<FormState>();
   final TextEditingController _pass = TextEditingController();
   final TextEditingController _confirmPass = TextEditingController();
   final TextEditingController _email = TextEditingController();
+  final TextEditingController _resetEmail = TextEditingController();
+
+  AuthRepository? authRepository;
+
+  void sendResetEmail({required String email}) {
+    authRepository?.resetPass(email: email);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +112,59 @@ class _LoginPageState extends State<LoginPage> {
                 Padding(
                   padding: const EdgeInsets.only(top: 5),
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                          insetPadding: EdgeInsets.symmetric(horizontal: 20),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(32.0),
+                            ),
+                          ),
+                          title: Text('resetPassword'.tr),
+                          content: Builder(builder: (context) {
+                            var height = MediaQuery.of(context).size.height;
+                            var width = MediaQuery.of(context).size.width;
+
+                            return Form(
+                              key: secformKey,
+                              child: Container(
+                                height: height * 0.2,
+                                width: width,
+                                child: Center(
+                                    child: ResetEmailFormField(
+                                  editingController: _resetEmail,
+                                )),
+                              ),
+                            );
+                          }),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                if (secformKey.currentState!.validate()) {
+                                  sendResetEmail(email: _resetEmail.text);
+                                  Navigator.pop(context);
+                                } else {
+                                  print('nope');
+                                }
+                              },
+                              child: Text(
+                                'ok'.tr,
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(
+                                'cancelDelete'.tr,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                     child: Text('forgotPassword'.tr),
                   ),
                 ),

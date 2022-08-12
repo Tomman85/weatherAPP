@@ -68,9 +68,16 @@ class _SearchPageState extends State<SearchPage> {
                   contentText: 'deleteData'.tr,
                   child: TextButton(
                     onPressed: () {
-                      Hive.box(favCity).clear();
-                      Authentication.clearAllData();
-                      Navigator.of(context).pop();
+                      if (context.read<AuthBloc>().state.authStatus ==
+                          AuthStatus.authenticated) {
+                        Hive.box(favCity).clear();
+                        Authentication.clearAllData();
+                        Navigator.of(context).pop();
+                      } else {
+                        Hive.box(favCity).clear();
+                        Navigator.of(context).pop();
+                      }
+
                     },
                     child: Text('deleteCity'.tr),
                   ),

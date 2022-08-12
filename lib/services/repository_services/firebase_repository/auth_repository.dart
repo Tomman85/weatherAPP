@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart' as fbAuth;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:weather/models/custom_error_model/custom_error_model.dart';
 import 'package:weather/const/db_constants.dart';
+import 'package:weather/services/repository_services/firebase_repository/profile_repository.dart';
 
 class AuthRepository {
   final FirebaseFirestore firebaseFirestore;
@@ -76,4 +77,17 @@ class AuthRepository {
   Future<void> deleteCurrentUser() async {
     await fbAuth.FirebaseAuth.instance.currentUser!.delete();
   }
+
+  Future<void> resetPass({
+    required String email,
+  }) async {
+    try {
+      await firebaseAuth.sendPasswordResetEmail(email: email);
+      print('done');
+    } on fbAuth.FirebaseAuthException catch (e) {
+      'do nothing';
+      print(e);
+    }
+  }
+
 }

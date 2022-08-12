@@ -72,17 +72,19 @@ class _SettingsPageState extends State<SettingsPage> {
               style: CustomTypography.textStyleSettingsSubtitle,
             ),
           ),
-          BuildSettingsPageRow(
-            firstStyle: CustomTypography.textStyleAutocompleteBasic,
-            secondStyle: CustomTypography.textStyleSettingsSubtitle,
-            firstColumnData: 'deleteAccount'.tr,
-            secondColumnData: IconButton(
-              icon: Icon(Icons.delete),
-              onPressed: () {
-                _showDialog();
-              },
-            ),
-          ),
+          context.read<AuthBloc>().state.authStatus == AuthStatus.authenticated
+              ? BuildSettingsPageRow(
+                  firstStyle: CustomTypography.textStyleAutocompleteBasic,
+                  secondStyle: CustomTypography.textStyleSettingsSubtitle,
+                  firstColumnData: 'deleteAccount'.tr,
+                  secondColumnData: IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      _showDialog();
+                    },
+                  ),
+                )
+              : Container(),
         ],
       ),
     );
@@ -97,8 +99,8 @@ class _SettingsPageState extends State<SettingsPage> {
     return showDialog(
       context: context,
       builder: ((context) => AlertDialog(
-            title: Text('delete_account'.tr),
-            content: Text('do_you_really_want_to_delete'.tr),
+            title: Text('deleteAccount'.tr),
+            content: Text('wantDelete'.tr),
             actions: [
               TextButton(
                 child: const Text(
@@ -106,10 +108,12 @@ class _SettingsPageState extends State<SettingsPage> {
                   style: TextStyle(color: Colors.red),
                 ),
                 onPressed: () {
+                  Navigator.pop(context);
+
                   context.read<ProfileRepository>().deleteCurrentUserDatabase();
                   context.read<AuthBloc>().add(DeletionRequestedEvent());
                   context.read<UserCubit>().initialUser();
-                  Navigator.pop(context);
+
                 },
               ),
               TextButton(
