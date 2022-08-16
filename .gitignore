@@ -48,3 +48,4 @@ app.*.map.json
 lib/credentials.dart
 lib/firebase_options.dart
 ios/firebase_app_id_file.json
+config/

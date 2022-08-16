@@ -6,6 +6,7 @@ import 'package:weather/presentation/home_page/home_page.dart';
 import 'package:weather/presentation/login_page/login_page.dart';
 import 'package:weather/presentation/search_page/search_page.dart';
 import 'package:weather/presentation/settings_page/settings_page.dart';
+import 'package:weather/services/config_reader/config_reader.dart';
 import 'package:weather/services/network_services/network_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:weather/wrappers/bloc_wrapper.dart';
@@ -13,8 +14,10 @@ import 'package:weather/wrappers/provider_wrapper.dart';
 import 'firebase_options.dart';
 import 'const/page_name_routes.dart';
 
-void main() async {
+
+Future<void> mainCommon(String env) async {
   WidgetsFlutterBinding.ensureInitialized();
+  await ConfigReader.initialize(env);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

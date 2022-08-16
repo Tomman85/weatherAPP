@@ -52,9 +52,10 @@ class LocaleString extends Translations {
           'deleteAccount': 'Delete account',
           'anyCity':
               'You don\'t own any city to view weather information. To add a selected city, click the button below',
-          'resetPassword':'Password reset',
-          'wantDelete':'Are you sure to delete password?'
-
+          'resetPassword': 'Password reset',
+          'wantDelete': 'Are you sure to delete password?',
+          'logout': 'Are You sure to logout',
+          'yes': 'Yes',
         },
         'pl_PL': {
           'sunrise': 'Wschód słońca',
@@ -107,7 +108,9 @@ class LocaleString extends Translations {
           'anyCity':
               'Nie posiadasz żadnego miasta aby wyświetlić informacje pogodową. Aby dodać wybrane miasto kliknji przycisk poniżej',
           'resetPassword': 'Restowanie hasła',
-          'wantDelete':' Jesteś pewny aby usunąć konto?'
+          'wantDelete': ' Jesteś pewny aby usunąć konto?',
+          'logout': 'Czy na pewno chcesz sie wylogować',
+          'yes': 'Tak',
         }
       };
 }

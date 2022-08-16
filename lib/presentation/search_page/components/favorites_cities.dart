@@ -42,7 +42,7 @@ class _FavoritesCitiesState extends State<FavoritesCities> {
           padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 10),
           height: 600,
           child: box.isEmpty
-              ? const Text('Task na next week')
+              ? Container()
               : ListView.builder(
                   itemCount: box.length,
                   itemBuilder: (BuildContext context, int index) {

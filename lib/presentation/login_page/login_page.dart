@@ -133,9 +133,10 @@ class _LoginPageState extends State<LoginPage> {
                                 height: height * 0.2,
                                 width: width,
                                 child: Center(
-                                    child: ResetEmailFormField(
-                                  editingController: _resetEmail,
-                                )),
+                                  child: ResetEmailFormField(
+                                    editingController: _resetEmail,
+                                  ),
+                                ),
                               ),
                             );
                           }),
@@ -145,9 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                                 if (secformKey.currentState!.validate()) {
                                   sendResetEmail(email: _resetEmail.text);
                                   Navigator.pop(context);
-                                } else {
-                                  print('nope');
-                                }
+                                } else {}
                               },
                               child: Text(
                                 'ok'.tr,
