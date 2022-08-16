@@ -8,7 +8,7 @@ class SignInCubit extends Cubit<SignInState> {
 
   SignInCubit({required this.authRepository}) : super(SignInState.initial());
 
-  Future<void> SignIn({
+  Future<void> signIn({
     required String email,
     required String password,
   }) async {

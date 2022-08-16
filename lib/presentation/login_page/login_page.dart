@@ -1,6 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_field_validator/form_field_validator.dart';
@@ -116,8 +113,8 @@ class _LoginPageState extends State<LoginPage> {
                       showDialog(
                         context: context,
                         builder: (_) => AlertDialog(
-                          insetPadding: EdgeInsets.symmetric(horizontal: 20),
-                          shape: RoundedRectangleBorder(
+                          insetPadding: const EdgeInsets.symmetric(horizontal: 20),
+                          shape: const  RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(32.0),
                             ),
@@ -129,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
 
                             return Form(
                               key: secformKey,
-                              child: Container(
+                              child: SizedBox(
                                 height: height * 0.2,
                                 width: width,
                                 child: Center(
@@ -239,7 +236,7 @@ class _LoginPageState extends State<LoginPage> {
           ? null
           : context
               .read<SignInCubit>()
-              .SignIn(email: _email.text, password: _pass.text)
+              .signIn(email: _email.text, password: _pass.text)
               .then(
                 (_) => context.read<UserCubit>().getProfile(
                     uid: fb_auth.FirebaseAuth.instance.currentUser?.uid),
@@ -274,11 +271,11 @@ class _LoginPageState extends State<LoginPage> {
       context: context,
       contentText: 'Czy chcesz schynchronizować bieżące miasta?',
       child: TextButton(
-        child: Text('Tak'),
+        child: const Text('Tak'),
         onPressed: () async {
           Hive.box(favCity).isEmpty
               ? Authentication.clearAndUpdate()
-              : await Authentication.updateDataWhenRegisterAndLogin().then((_) {
+              :  Authentication.updateDataWhenRegisterAndLogin().then((_) {
                   Authentication.clearAndUpdate();
                 });
           Navigator.of(context).popUntil(
@@ -287,7 +284,7 @@ class _LoginPageState extends State<LoginPage> {
         },
       ),
       secondChild: TextButton(
-        child: Text('Nie'),
+        child: const Text('Nie'),
         onPressed: () {
           Authentication.clearAndUpdate();
           Navigator.of(context).popUntil(

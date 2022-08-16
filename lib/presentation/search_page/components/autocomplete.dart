@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
@@ -260,7 +261,9 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
         _getAddressFromLatLng();
       });
     }).catchError((e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     });
   }
 
@@ -275,7 +278,9 @@ class _AutocompletePredictionsState extends State<AutocompletePredictions> {
         _currentAddress = "${place.locality}, ${place.country}";
       });
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 }

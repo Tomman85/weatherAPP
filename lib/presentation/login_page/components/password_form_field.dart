@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:get/get.dart';
-
 class PasswordFormField extends StatelessWidget {
   final bool isVisibility;
   final String? labelText;

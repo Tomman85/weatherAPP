@@ -3,7 +3,7 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:weather/const/hive_box_names.dart';
-import 'package:firebase_auth/firebase_auth.dart' as fbAuth;
+import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:weather/models/hive_box_models/model_list_of_cities.dart';
 
 class Authentication {
@@ -13,8 +13,8 @@ class Authentication {
     await Hive.box(favCity).clear();
     return db
         .collection('users')
-        .doc(fbAuth.FirebaseAuth.instance.currentUser?.uid)
-        .get(GetOptions(source: Source.server))
+        .doc(fb_auth.FirebaseAuth.instance.currentUser?.uid)
+        .get(const GetOptions(source: Source.server))
         .then(
       (value) {
         List citiesFromFirebase = value.get('cities');
@@ -47,7 +47,7 @@ class Authentication {
 
     db
         .collection("users")
-        .doc(fbAuth.FirebaseAuth.instance.currentUser?.uid)
+        .doc(fb_auth.FirebaseAuth.instance.currentUser?.uid)
         .set({
       'cities': cityList
     }, SetOptions(merge: true));
@@ -59,7 +59,7 @@ class Authentication {
     };
     db
         .collection('users')
-        .doc(fbAuth.FirebaseAuth.instance.currentUser?.uid)
+        .doc(fb_auth.FirebaseAuth.instance.currentUser?.uid)
         .update(updates);
     Hive.box(favCity).values.toList().forEach((element) {
       final Map myList = {};
@@ -70,7 +70,7 @@ class Authentication {
       elo.add(myList);
       db
           .collection("users")
-          .doc(fbAuth.FirebaseAuth.instance.currentUser?.uid)
+          .doc(fb_auth.FirebaseAuth.instance.currentUser?.uid)
           .set(
         {'cities': FieldValue.arrayUnion(elo)},
         SetOptions(merge: true),
@@ -81,7 +81,7 @@ class Authentication {
   static Future<void> clearAllData() async {
     db
         .collection("users")
-        .doc(fbAuth.FirebaseAuth.instance.currentUser?.uid)
+        .doc(fb_auth.FirebaseAuth.instance.currentUser?.uid)
         .set(
       {'cities': []},
       SetOptions(merge: true),

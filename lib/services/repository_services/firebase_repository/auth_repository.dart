@@ -1,19 +1,18 @@
-import 'package:firebase_auth/firebase_auth.dart' as fbAuth;
+import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:weather/models/custom_error_model/custom_error_model.dart';
 import 'package:weather/const/db_constants.dart';
-import 'package:weather/services/repository_services/firebase_repository/profile_repository.dart';
 
 class AuthRepository {
   final FirebaseFirestore firebaseFirestore;
-  final fbAuth.FirebaseAuth firebaseAuth;
+  final fb_auth.FirebaseAuth firebaseAuth;
 
   AuthRepository({
     required this.firebaseFirestore,
     required this.firebaseAuth,
   });
 
-  Stream<fbAuth.User?> get user => firebaseAuth.userChanges();
+  Stream<fb_auth.User?> get user => firebaseAuth.userChanges();
 
   Future<void> signUp({
     required String name,
@@ -21,7 +20,7 @@ class AuthRepository {
     required String password,
   }) async {
     try {
-      final fbAuth.UserCredential userCredential =
+      final fb_auth.UserCredential userCredential =
           await firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
@@ -33,7 +32,7 @@ class AuthRepository {
         'email': email,
         'cities': [],
       });
-    } on fbAuth.FirebaseAuthException catch (e) {
+    } on fb_auth.FirebaseAuthException catch (e) {
       throw CustomError(
         code: e.code,
         message: e.message!,
@@ -55,7 +54,7 @@ class AuthRepository {
     try {
       await firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
-    } on fbAuth.FirebaseAuthException catch (e) {
+    } on fb_auth.FirebaseAuthException catch (e) {
       throw CustomError(
         code: e.code,
         message: e.message!,
@@ -75,7 +74,7 @@ class AuthRepository {
   }
 
   Future<void> deleteCurrentUser() async {
-    await fbAuth.FirebaseAuth.instance.currentUser!.delete();
+    await fb_auth.FirebaseAuth.instance.currentUser!.delete();
   }
 
   Future<void> resetPass({
@@ -83,11 +82,8 @@ class AuthRepository {
   }) async {
     try {
       await firebaseAuth.sendPasswordResetEmail(email: email);
-      print('done');
-    } on fbAuth.FirebaseAuthException catch (e) {
+    } on fb_auth.FirebaseAuthException catch (_) {
       'do nothing';
-      print(e);
     }
   }
-
 }

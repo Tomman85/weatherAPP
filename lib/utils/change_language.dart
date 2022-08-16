@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:core';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
 class LanguageFormat {
   static void changeLanguage() {

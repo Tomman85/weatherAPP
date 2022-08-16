@@ -1,4 +1,3 @@
-import 'package:bordered_text/bordered_text.dart';
 import 'package:flutter/material.dart';
 import 'package:weather/reusable_widgets/border_text_style.dart';
 import 'package:weather/utils/custom_typography.dart';

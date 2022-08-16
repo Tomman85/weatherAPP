@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-import 'package:icon_decoration/icon_decoration.dart';
 import 'package:weather/bloc/auth/auth_bloc.dart';
 import 'package:weather/const/hive_box_names.dart';
 import 'package:weather/const/page_name_routes.dart';

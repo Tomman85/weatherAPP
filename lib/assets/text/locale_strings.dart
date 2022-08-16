@@ -44,7 +44,6 @@ class LocaleString extends Translations {
           'specialPassword':
               'Passwords must have at least one special character',
           'matchPassword': 'Passwords do not match',
-          'loginApp': 'Login',
           'accountRegistered':
               'The account has been created. The data will be synchronized',
           'deleteData': 'Are You sure to delete all data?',
@@ -99,7 +98,6 @@ class LocaleString extends Translations {
           'specialPassword':
               'Hasło musi zawierać co najmniej jeden specjalny znak',
           'matchPassword': 'Hasła nie pasują do siebie',
-          'login': 'Zaloguj się',
           'accountRegistered':
               'Konto zostało utworzone. Dane zostaną synchronizowane',
           'deleteData': 'Czy chcesz usunąć wszystkie dane dotyczące miast?',

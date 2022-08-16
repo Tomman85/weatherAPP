@@ -1,11 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:hive/hive.dart';
 import 'package:weather/const/db_constants.dart';
-import 'package:weather/const/hive_box_names.dart';
 import 'package:weather/models/custom_error_model/custom_error_model.dart';
-import 'package:weather/models/hive_box_models/model_list_of_cities.dart';
 import 'package:weather/models/user_model/user_model.dart';
-import 'package:firebase_auth/firebase_auth.dart' as fbAuth;
+import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 
 class ProfileRepository {
   final FirebaseFirestore firebaseFirestore;
@@ -22,7 +19,7 @@ class ProfileRepository {
         return currentUser;
       }
       throw 'User not found';
-    } on FirebaseException catch (e) {
+    } on FirebaseException catch (_) {
       throw CustomError();
     } catch (e) {
       throw CustomError(
@@ -33,7 +30,7 @@ class ProfileRepository {
   }
 
   void deleteCurrentUserDatabase() {
-    usersRef.doc(fbAuth.FirebaseAuth.instance.currentUser?.uid).delete();
+    usersRef.doc(fb_auth.FirebaseAuth.instance.currentUser?.uid).delete();
   }
 
 

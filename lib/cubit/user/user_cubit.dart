@@ -1,9 +1,7 @@
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
 import 'package:weather/models/custom_error_model/custom_error_model.dart';
 import 'package:weather/models/user_model/user_model.dart';
 import 'package:weather/services/repository_services/firebase_repository/profile_repository.dart';
-import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 part 'user_state.dart';
 
 class UserCubit extends Cubit<ProfileState> {

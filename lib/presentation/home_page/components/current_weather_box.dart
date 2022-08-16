@@ -7,7 +7,7 @@ import 'package:weather/utils/custom_typography.dart';
 import 'package:weather/utils/data_custom_format.dart';
 
 class CurrentWeatherBox extends StatefulWidget {
-  CurrentWeatherBox({
+  const CurrentWeatherBox({
     Key? key,
     required this.size,
     required this.data,
@@ -48,7 +48,6 @@ class _CurrentWeatherBoxState extends State<CurrentWeatherBox> {
   @override
   Widget build(BuildContext context) {
     double degree = getDegree();
-    print(degree);
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),

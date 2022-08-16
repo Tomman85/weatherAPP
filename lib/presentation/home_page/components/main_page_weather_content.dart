@@ -11,7 +11,6 @@ import 'package:weather/presentation/home_page/components/weather_background_bui
 import 'package:weather/presentation/home_page/home_page.dart';
 import 'package:weather/services/repository_services/openweather_repository_service/openweather_repository_service.dart';
 import 'package:weather/reusable_widgets/border_text_style.dart';
-import 'package:weather/utils/custom_typography.dart';
 import 'current_weather_box.dart';
 import 'daily_weather_list.dart';
 import 'horizontal_weather_list.dart';
@@ -90,7 +89,7 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent>
                                 color: Colors.black, fontSize: 18),
                             textAlign: TextAlign.center,
                           ),
-                          Spacer(),
+                          const Spacer(),
                           Align(
                             alignment: Alignment.bottomRight,
                             child: FloatingActionButton(
@@ -115,7 +114,7 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent>
             } else if (snapshot.hasData) {
               dynamic data = snapshot.data;
               child = Scaffold(
-                key: ValueKey(1),
+                key: const ValueKey(1),
                 extendBodyBehindAppBar: true,
                 appBar: AppBar(
                   title: BorderTextStyle(
@@ -226,7 +225,7 @@ class _MainPageWeatherContentState extends State<MainPageWeatherContent>
               );
             } else {
               child = Scaffold(
-                key: ValueKey(0),
+                key: const ValueKey(0),
                 body: Center(
                   child: Lottie.asset(
                     'lib/assets/lottie/61302-weather-icon.json',

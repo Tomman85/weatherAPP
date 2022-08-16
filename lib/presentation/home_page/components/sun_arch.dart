@@ -1,12 +1,6 @@
-import 'dart:math';
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-
 import 'package:path_drawing/path_drawing.dart';
-
-import 'package:vector_math/vector_math_64.dart' as v3;
 
 class SunArch extends StatefulWidget {
   final double lineDegree;
@@ -53,7 +47,7 @@ class DashLine extends CustomPainter {
 
     var path = Path();
     path.addArc(
-        Rect.fromCircle(center: Offset(0, 180), radius: 180), -2.5, 2.0);
+        Rect.fromCircle(center: const Offset(0, 180), radius: 180), -2.5, 2.0);
 
     canvas.drawPath(
         dashPath(path, dashArray: CircularIntervalList([7.0, 8.0])), paint1);
@@ -80,7 +74,7 @@ class FillLine extends CustomPainter {
 
     var path = Path();
     path.addArc(
-        Rect.fromCircle(center: Offset(0, 180), radius: 180), -2.6, degree);
+        Rect.fromCircle(center: const Offset(0, 180), radius: 180), -2.6, degree);
     canvas.drawPath(path, paint1);
   }
 

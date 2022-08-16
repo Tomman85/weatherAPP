@@ -8,8 +8,7 @@ class OpenweatherRepositoryService {
       Response response =
           await OpenweatherNetworkService.getOpenweatherData(lat, lon,lang);
       return ListWeatherDataModel.fromJson(response.data);
-    } catch (e) {
-      print(e);
+    } catch (_) {
       return null;
     }
   }

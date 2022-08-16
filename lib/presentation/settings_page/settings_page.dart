@@ -7,7 +7,6 @@ import 'package:weather/presentation/settings_page/components/build_settings_pag
 import 'package:weather/services/repository_services/firebase_repository/profile_repository.dart';
 import 'package:weather/utils/change_language.dart';
 import 'package:weather/utils/custom_typography.dart';
-import 'package:weather/utils/data_custom_format.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -51,7 +50,7 @@ class _SettingsPageState extends State<SettingsPage> {
             secondStyle: CustomTypography.textStyleSettingsSubtitle,
             firstColumnData: 'chooseLanguage'.tr,
             secondColumnData: DropdownButton<String>(
-              icon: Icon(Icons.unfold_more),
+              icon: const Icon(Icons.unfold_more),
               dropdownColor: Colors.grey.shade300,
               style: CustomTypography.textStyleSettingsSubtitle,
               value: selectedItem,
@@ -78,7 +77,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   secondStyle: CustomTypography.textStyleSettingsSubtitle,
                   firstColumnData: 'deleteAccount'.tr,
                   secondColumnData: IconButton(
-                    icon: Icon(Icons.delete),
+                    icon: const Icon(Icons.delete),
                     onPressed: () {
                       _showDialog();
                     },
