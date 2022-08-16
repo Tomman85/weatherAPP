@@ -29,7 +29,7 @@ class LocaleString extends Translations {
           'settings': 'Settings',
           'changeLanguage': 'Language',
           'chooseLanguage': 'Choose language',
-          'login': 'Login',
+          'loginApp': 'Login',
           'email': 'Enter email',
           'password': 'Enter password',
           'passwordRepeat': 'Repeat the password',
@@ -44,7 +44,7 @@ class LocaleString extends Translations {
           'specialPassword':
               'Passwords must have at least one special character',
           'matchPassword': 'Passwords do not match',
-          'login': 'Login',
+          'loginApp': 'Login',
           'accountRegistered':
               'The account has been created. The data will be synchronized',
           'deleteData': 'Are You sure to delete all data?',
