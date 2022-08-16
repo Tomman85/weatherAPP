@@ -6,6 +6,7 @@ import 'package:weather/const/hive_box_names.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:weather/models/hive_box_models/model_list_of_cities.dart';
 
+
 class Authentication {
   static FirebaseFirestore db = FirebaseFirestore.instance;
 
