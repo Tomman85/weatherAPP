@@ -30,6 +30,7 @@ Future<void> mainCommon(String env) async {
 
 }
 
+
 NetworkService networkService = NetworkService();
 
 class MyApp extends StatelessWidget {
