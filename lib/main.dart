@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:weather/assets/text/locale_strings.dart';
 import 'package:weather/config/hive_setup.dart';
@@ -22,7 +23,11 @@ Future<void> mainCommon(String env) async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await HiveSetup.hiveInitialization();
-  runApp(const MyApp());
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    runApp(const MyApp());
+  });
+
 }
 
 NetworkService networkService = NetworkService();
