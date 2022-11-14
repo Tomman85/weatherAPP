@@ -5,19 +5,10 @@ import 'package:weather/config/environment.dart';
 abstract class ConfigReader {
   static late Map<String, dynamic> _config;
 
-  static Future<void> initialize(String env) async {
+  static Future<void> initialize() async {
     String configString;
 
-    switch (env) {
-      case Environment.prod:
-        configString = await rootBundle.loadString('config/prod.json');
-        break;
-      case Environment.dev:
-      default:
-        configString = await rootBundle.loadString('config/dev.json');
-        break;
-    }
-
+    configString = await rootBundle.loadString('config/app_config.json');
     _config = json.decode(configString) as Map<String, dynamic>;
   }
 

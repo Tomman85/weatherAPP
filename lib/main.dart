@@ -16,9 +16,9 @@ import 'firebase_options.dart';
 import 'const/page_name_routes.dart';
 
 
-Future<void> mainCommon(String env) async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await ConfigReader.initialize(env);
+  await ConfigReader.initialize();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
